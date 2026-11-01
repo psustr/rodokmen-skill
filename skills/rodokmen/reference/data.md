@@ -33,7 +33,14 @@ P = {
 - `r` klíče zápisů ze `zaznamy.json`. `st` viz `matriky.md`: `doc` přečteno v matrice, `prob` pravděpodobné,
   `fam` od rodiny (i strom, který si rodina vede sama, např. GEDCOM z jejího MyHeritage), `mh` cizí strom z internetu, `unk`.
 - `LINES = {8: ("Novákové", "Kováři z Holic…"), …}` – jen čísla 8–15; název rodu = příjmení v množném čísle.
-- `SIDE` – sourozenci a další příbuzní: `dict(k=<číslo předka>, n="Josef Novák (1865–1920)", t="text", r=[klíče])`.
+- `SIDE` – sourozenci a další příbuzní: `dict(k=<číslo předka>, n="Josef Novák", vztah="sourozenec", y="1865–1920",
+  f=["* 3. 2. 1865 Holice čp. 12", "× 1890 Anna Malá", "† 1920"], st="doc", t="text", r=[klíče])`.
+  - **Sourozenci:** `k` = předek, jehož jsou sourozenci, `vztah` začíná „sourozenec“ / „sestra“ / „bratr“ / „nevlastní“
+    (např. `"nevlastní sourozenec (z 1. manželství otce)"`). Na stránce rodiny jsou mezi dětmi spolu s přímým předkem,
+    seřazení podle roku narození (`y`, jinak fakt začínající `*`), na stránce předka v oddílu „Sourozenci“.
+    `f` jako u předků (narození, sňatek, úmrtí, povolání, přípisy na okraji křtu), `st` jako u předků (`doc` jen ze snímku).
+  - Ostatní (manželka z 1. manželství, strýc, kmotr-příbuzný): bez `vztah` nebo s jiným `vztah` → karta „Další příbuzní“.
+  - Starý formát `dict(k=…, n="Josef Novák (1865–1920)", t="…")` funguje dál (jako „Další příbuzní“).
 - `ISSUES` – dvojice `("Otázka", "Vyřešeno: … / Hypotéza: … / Otevřené: …")` → stránka „Co hledáme“ (vyřešené se skryjí).
   Jde na web – nepiš sem citlivé věci (příčiny úmrtí, rodinné spory) bez souhlasu.
 - `HYPOTEZY` – `dict(rod=8, nadpis="…", text="…", polozky=[("jméno", "text")], zaznamy=[klíče])` → stránka rodu.

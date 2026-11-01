@@ -121,6 +121,9 @@ Základní smyčka pro každou osobu:
    4. rámeček čteného místa: `python3 -I tools/ramecek.py <klíč> x0,y0,x1,y1` a **prohlédni si** `pracovni/ramecek_<klíč>.jpg`,
    5. přepis originálu a český překlad do `data/prepisy.json` (nejistá místa „(?)“, nečitelná „[…]“),
    6. osobu/osoby do `data/osoby.py` (`f` fakta, `r` klíč zápisu, `st="doc"`), sourozence a kmotry-příbuzné do `SIDE`.
+      **Sourozenci se zapisují vždy** (`vztah="sourozenec"`, `y`, `f`, viz `reference/data.md`): když u křtu předka
+      projdeš rejstřík nebo stránky knihy, zapiš i všechny děti stejných rodičů (datum, dům, okrajové přípisy o sňatku
+      a úmrtí) – jen tak se dají najít bez dalšího stahování. Sourozenci z rejstříku bez přečteného zápisu = `st="prob"`.
 6. **Zapiš hledání do deníku** `data/research_log.md` – i neúspěšné, s rozsahem (které roky / snímky jsi prošel).
    Narazíš-li po cestě na **zjevně související výskyt** (vzácné příjmení rodu, stejný dům, jméno z rodinného
    vyprávění), zapiš ho do výsledku v deníku se snímkem – je to jen stopa, ne doklad. Když se hledání zasekne,
@@ -165,6 +168,16 @@ Do zadání jim napiš technické pasti z `reference/matriky.md` (macOS: zsh; Wi
 **V zadání chtěj u každého prošlého snímku, co na něm skutečně přečetl** (rok, první jméno), ne jen „prošel jsem
 sn. 20–40“ – pomocník jinak přehlédne, že se mu část snímků nenačetla. Na špatně čitelné knihy (kurent 1. poloviny
 19. století, vybledlé snímky) pomocníky nepouštěj, nebo jim dej přesný snímek; ARON a Porta fontium zvládají dobře.
+
+### Sourozenci předků
+Rodina čte stránky rodin jako „kdo všechno tam byl“ – sourozenci jsou pro ni skoro stejně zajímaví jako předci
+(strýcové, tety, bratranci, odkud se vzali dnešní příbuzní). Proto:
+- Při každém hledání zapisuj i sourozence, na které narazíš (viz krok 5.6) – nic to nestojí, snímek už máš.
+- **Cíleně je dohledávej přednostně u nejmladších generací** – sourozenci rodičů, prarodičů a praprarodičů výchozí
+  osoby (do 4.–5. generace), dlouhodobě i dál. Postup: rejstřík křtů (všechny děti otce v obci), nebo stránky knihy
+  od sňatku rodičů po ~25 let dál v jejich domě; u každého dítěte přípisy na okraji (sňatek, úmrtí), dětská úmrtí
+  ve stejné knize. Mladší svazky (po ~1910) nejsou online – co víš od rodiny, zapiš jako `st="fam"`.
+- Na stránce rodiny jsou děti seřazené podle narození; přímý předek je zvýrazněný.
 
 ### Kdy přestat
 Linie končí, když matriky mlčí (nemanželské dítě bez otce, shořelé knihy, chybějící svazky) nebo když jsi

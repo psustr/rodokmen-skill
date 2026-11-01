@@ -206,3 +206,11 @@ main.full { max-width: none; padding: 0; }
 .card-link::after { content: '→'; position: absolute; top: 0.7rem; right: 0.9rem; font-size: 1.15rem; color: var(--accent); opacity: 0.55; transition: opacity 0.15s, transform 0.15s; }
 .card-link:hover::after { opacity: 1; transform: translateX(3px); }
 .card-link h3 { padding-right: 1.4rem; }
+
+/* Děti na stránce rodiny – přímý předek a sourozenci podle roku narození */
+ol.kids { list-style: none; padding: 0; margin: 0 0 .8rem; counter-reset: kid; }
+ol.kids > li.kid { position: relative; padding: .45rem .7rem .45rem 2.2rem; border-left: 3px solid var(--line, #ddd); margin-bottom: .4rem; }
+ol.kids > li.kid::before { counter-increment: kid; content: counter(kid) "."; position: absolute; left: .6rem; top: .45rem; color: #888; font-size: .9em; }
+ol.kids > li.kid.direct { border-left-color: var(--accent); background: var(--accent-soft); }
+ol.kids > li.kid p { margin: .1rem 0; }
+ol.kids > li.kid ul.facts { margin: .15rem 0 .1rem; }

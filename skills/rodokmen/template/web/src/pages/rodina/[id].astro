@@ -11,6 +11,12 @@ const f = families[Astro.params.id];
 const father = f.father ? people[f.father] : null;
 const mother = f.mother ? people[f.mother] : null;
 const children = f.children.map((s) => people[s]);
+// Děti = přímí předci + známí sourozenci (SIDE s vztah „sourozenec…“), seřazení podle roku narození
+const kids = [
+  ...children.map((c) => ({ direct: true, p: c, birth: c.birth })),
+  ...f.side.filter((s) => s.sibling).map((s) => ({ direct: false, s, birth: s.birth })),
+].sort((a, b) => a.birth - b.birth);
+const others = f.side.filter((s) => !s.sibling);
 const line = f.line ? lineByK[f.line] : null;
 const title = [father?.name ?? (f.fatherUnknown ? 'otec neuveden' : 'neznámý otec'), mother?.name ?? 'neznámá matka'].join(' a ');
 ---
@@ -41,13 +47,30 @@ const title = [father?.name ?? (f.fatherUnknown ? 'otec neuveden' : 'neznámý o
   )}
 
   <h2>Děti</h2>
-  <ul class="facts">
-    {children.map((c) => <li><PersonLink slug={c.slug} /> – přímý předek ({c.rel})</li>)}
-  </ul>
-  {f.side.length > 0 && (
-    <div class="grid2">{f.side.map((s) => <div class="card"><h3>{s.name}</h3><p class="small">{s.text}</p></div>)}</div>
+  <ol class="kids">
+    {kids.map((x) => x.direct ? (
+      <li class="kid direct">
+        <p><strong><PersonLink slug={x.p.slug} /></strong> <span class="small muted">– přímý předek ({x.p.rel})</span></p>
+        {x.p.facts.length > 0 && <ul class="facts small">{x.p.facts.map((t) => <li>{t}</li>)}</ul>}
+      </li>
+    ) : (
+      <li class="kid">
+        <p><strong>{x.s.name}</strong>{x.s.years && <span class="muted"> ({x.s.years})</span>} <span class="small muted">– {x.s.rel}{x.s.status && x.s.st !== 'doc' ? `, ${x.s.status}` : ''}</span></p>
+        {x.s.facts.length > 0 && <ul class="facts small">{x.s.facts.map((t) => <li>{t}</li>)}</ul>}
+        {x.s.text && <p class="small">{x.s.text}</p>}
+        {x.s.records.length > 0 && <p class="small">Zápisy: {x.s.records.filter((r) => records[r]).map((r, i) => <>{i > 0 && ' · '}<a href={href.record(r)}>{records[r].title} ({records[r].date})</a></>)}</p>}
+      </li>
+    ))}
+  </ol>
+  {kids.length === children.length
+    ? <p class="small muted">Sourozenci zatím nejsou dohledaní.</p>
+    : <p class="small muted">Sourozenci, které jsme zatím našli v matrikách – seznam nemusí být úplný.</p>}
+  {others.length > 0 && (
+    <>
+      <h2>Další příbuzní</h2>
+      <div class="grid2">{others.map((s) => <div class="card"><h3>{s.name}</h3><p class="small">{s.text}</p></div>)}</div>
+    </>
   )}
-  <p class="small muted">Další sourozence zatím systematicky nehledáme – tady jsou jen ti, na které jsme narazili.</p>
 
   {f.records.length > 0 && (
     <>

@@ -98,6 +98,35 @@ def years(y):
     return f"{approx}{ys[0]}–{second}"
 
 
+SIBLING = ("sourozenec", "sestra", "bratr", "nevlastní")   # SIDE[vztah] začínající tímto = sourozenec předka
+
+
+def is_sibling(s):
+    return (s.get("vztah") or "").lower().startswith(SIBLING)
+
+
+def birth_key(y, facts=()):
+    """Rok narození pro řazení dětí (neznámý → 9999)."""
+    y = (y or "").strip()
+    if y and not y.startswith(("?", "†")) and not re.match(r"^[–-]", y):
+        m = re.search(r"\d{4}", y)
+        if m:
+            return int(m.group())
+    for x in facts or ():
+        if x.startswith("*"):
+            m = re.search(r"\d{4}", x)
+            if m:
+                return int(m.group())
+    return 9999
+
+
+def side_row(s, recs):
+    return dict(name=s["n"], text=s.get("t", ""), records=[r for r in s.get("r", []) if r in recs],
+                rel=s.get("vztah", ""), y=s.get("y", ""), years=years(s.get("y")), facts=s.get("f", []),
+                st=s.get("st", ""), status=STATUS.get(s.get("st"), ""), sibling=is_sibling(s),
+                birth=birth_key(s.get("y"), s.get("f", [])))
+
+
 def gen(k):
     return k.bit_length() - 1
 
@@ -235,7 +264,7 @@ def main():
             fatherUnknown=(2 * k in P and placeholder(P[2 * k])), motherUnknown=(2 * k + 1 in P and placeholder(P[2 * k + 1])),
             child=slugs.get(k // 2) if k > 1 else None, spouse=slugs.get(k ^ 1) if k > 1 else None,
             family=None, ownFamily=None, path=path,
-            side=[dict(name=s["n"], text=s["t"], records=[r for r in s.get("r", []) if r in recs]) for s in SIDE if s["k"] == k],
+            side=[side_row(s, recs) for s in SIDE if s["k"] == k], birth=birth_key(p.get("y"), p.get("f", [])),
             docs=[dict(img=d["img"], caption=d["popis"]) for d in docs_cfg if k in d.get("osoby", [])],
             children=[slugs[c] for c in [k // 2] + [a // 2 for a in aliases_of.get(k, [])] if k > 1 and c in slugs],
             also=[dict(k=a, rel=relation(a), line=line_of(a), child=slugs.get(a // 2)) for a in aliases_of.get(k, [])],

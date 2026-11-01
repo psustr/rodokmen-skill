@@ -51,11 +51,24 @@ const path = [...p.path].reverse().filter(Boolean);
     )}
   </div>
 
-  {p.side.length > 0 && (
+  {p.side.some((s) => s.sibling) && (
+    <>
+      <h2>Sourozenci</h2>
+      <ul class="facts">
+        {p.side.filter((s) => s.sibling).sort((a, b) => a.birth - b.birth).map((s) => (
+          <li><strong>{s.name}</strong>{s.years && <span class="muted"> ({s.years})</span>} <span class="small muted">– {s.rel}</span>
+            {s.facts.length > 0 && <span class="small"> · {s.facts.join(' · ')}</span>}</li>
+        ))}
+      </ul>
+      {p.family && <p class="small"><a href={href.family(p.family)}>Všechny děti rodiny →</a></p>}
+    </>
+  )}
+
+  {p.side.some((s) => !s.sibling) && (
     <>
       <h2>Příbuzní mimo přímou linii</h2>
       <div class="grid2">
-        {p.side.map((s) => (
+        {p.side.filter((s) => !s.sibling).map((s) => (
           <div class="card"><h3>{s.name}</h3><p class="small">{s.text}</p>
             {s.records.length > 0 && <p class="small">Zápisy: {s.records.filter((r) => records[r]).map((r, i) => <>{i > 0 && ' · '}<a href={href.record(r)}>{records[r].date}</a></>)}</p>}
           </div>

@@ -26,7 +26,11 @@ LINES = {
 }
 
 # Příbuzní mimo přímou linii (sourozenci, strýcové…): k = číslo předka, ke kterému patří.
-# dict(k=16, n="Josef Novák (1865–1920)", t="Bratr Jana. Kovář v …", r=["klic_zapisu"])
+# Sourozenec předka k (na webu mezi dětmi rodiny, podle roku narození):
+# dict(k=16, n="Josef Novák", vztah="sourozenec", y="1865–1920", st="doc",
+#      f=["* 3. 2. 1865 Holice čp. 12", "kovář v Holicích", "† 1920 (přípis u křtu)"], t="Mladší bratr Jana.", r=["klic_zapisu"])
+# Jiný příbuzný (bez vztah="sourozenec…" → karta „Další příbuzní“):
+# dict(k=16, n="Anna Malá (1840–1870)", t="První manželka Jana…", r=["klic_zapisu"])
 SIDE = [
 ]
 
