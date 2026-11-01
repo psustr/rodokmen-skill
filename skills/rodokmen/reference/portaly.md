@@ -241,6 +241,20 @@ Nástroje pro ně hotové nejsou. Postupuj takto a výsledek zapiš do `STAV.md`
 6. Když se postup osvědčí, napiš pro portál vlastní malý nástroj podle `trebon.py` (bez prohlížeče, pokud to jde)
    a postup zapiš do `STAV.md`. Poznatek zapiš i do `poznamky_pro_skill.md` (pro správce skillu).
 
+## Německé (a zkomolené) názvy obcí – ztotožnění místa
+Matriky do 1918 (a farář z jiného kraje i dřív) píší obce německy, latinsky nebo zkomoleně („Wachtl“ = Skřípov,
+„Ligarovic“ = Ludgeřovice/Lidgeřovice, „Mallny“ = Maleny). Než obec prohlásíš za neznámou, zkus:
+- **Německé názvy českých obcí** (Rukověť genealoga, `https://genealogie.nka.cz/?page_id=1345`) – tabulka česky /
+  historická země / okres / německy / poznámka, Čechy, Morava i Slezsko. Jen **obce**, ne části obcí (Kelčice, Hrochov
+  tam nenajdeš). Stránka je velká (~1 MB): stáhni ji jednou do `pracovni/mistopis/` (`curl -A "Mozilla/5.0"`),
+  převeď tabulku na TSV a hledej v ní (`grep -i`), obráceně (německy → česky) taky jen hledáním.
+- **Ehemalige Ostgebiete** (`https://ehemalige-ostgebiete.de/en/place/<id>-<název>`) – databáze BKG s historickými
+  názvy, státem a správní jednotkou v čase (i zaniklé obce; hvězdička `*` jako zástupný znak na konci názvu).
+  Pozor na **stejnojmenná místa**: „Kunau“ je tam Kunov u Přísečnice (Krušné hory) – pro předka z Prostějovska nepravděpodobné.
+- Historický místopis Moravy a Slezska (Hosák), Wikipedie (sekce „Název“ s historickými tvary, např. Lidgeřovice).
+- Vždy ověř **souvislost**: patřila obec do kraje/panství, odkud rodina mohla přijít (sousední fary, panství, cesty)?
+  Nejisté ztotožnění dej do `ISSUES` jako „Hypotéza:“, ne jako doložené místo.
+
 ## Starší prameny (17.–18. století)
 - **Soupis poddaných podle víry 1651** – celé rodiny s věkem, po krajích; edice Národního archivu jako PDF
   (nacr.cz, hledej „Soupis poddaných podle víry“ + kraj). Fulltext v PDF, příjmení často bez diakritiky / s jinou ortografií
