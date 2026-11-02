@@ -5,7 +5,7 @@ import fan from '../generated/fan.svg?raw';
 import MobileTree from '../components/MobileTree.astro';
 import FamilyMap from '../components/FamilyMap.astro';
 import site from '../data/site.json';
-import { frontmatter as pribeh } from '../generated/pribeh.md';
+import { stories, storyHref } from '../lib/pribehy.js';
 const lineList = Object.values(lines).sort((a, b) => a.k - b.k);
 const uvod = config.uvod ?? {};
 const cards = config.zajimavosti_na_uvodu ?? [];
@@ -18,23 +18,23 @@ const cards = config.zajimavosti_na_uvodu ?? [];
       <div>
         {uvod.nadpis && <h2>{uvod.nadpis}</h2>}
         {(uvod.odstavce ?? []).map((t) => <p>{t}</p>)}
-        {config.maPribeh && <a class="btn" href="/pribehy/">{config.pribeh?.tlacitko || `Přečíst: ${pribeh.title}`} →</a>}
+        {stories.map((s) => <a class="btn" href={storyHref(s)}>{s.tlacitko || `Přečíst: ${s.title}`} →</a>)}
       </div>
       {uvod.foto && (
-        <a href={config.maPribeh ? '/pribehy/' : `/img/${uvod.foto}.jpg`}><img src={`/img/${uvod.foto}.jpg`} alt={uvod.foto_popis || ''} /></a>
+        <a href={stories.length ? storyHref(stories[0]) : `/img/${uvod.foto}.jpg`}><img src={`/img/${uvod.foto}.jpg`} alt={uvod.foto_popis || ''} /></a>
       )}
     </section>
   )}
 
-  {config.maPribeh && !(uvod.nadpis || uvod.odstavce?.length) && (
+  {stories.length > 0 && !(uvod.nadpis || uvod.odstavce?.length) && stories.map((s) => (
     <section class="teaser">
       <div>
-        <h2>{pribeh.title}</h2>
-        {pribeh.lead && <p>{pribeh.lead}</p>}
-        <a class="btn" href="/pribehy/">{config.pribeh?.tlacitko || 'Přečíst příběh'} →</a>
+        <h2>{s.title}</h2>
+        {s.lead && <p>{s.lead}</p>}
+        <a class="btn" href={storyHref(s)}>{s.tlacitko || 'Přečíst příběh'} →</a>
       </div>
     </section>
-  )}
+  ))}
 
   <div class="stats">
     <div><strong>{stats.ancestors}</strong>známých předků</div>

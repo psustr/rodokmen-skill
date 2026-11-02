@@ -11,7 +11,7 @@ Vznikl při skutečném hledání předků jedné rodiny.
 
 **Autor a správce:** Jindřich Šaršon ([sarsonj@gmail.com](mailto:sarsonj@gmail.com), [GitHub](https://github.com/sarsonj))
 
-**Aktuální verze: 0.5.2 (listopad 2026).** Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
+**Aktuální verze: 0.5.3 (listopad 2026)** – web umí víc příběhů (třeba otcovská a mateřská strana). Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
 podle toho, na co narazíte vy. Jak aktualizovat, najdete v části [Instalace](#instalace), seznam změn
 v [historii repozitáře](https://github.com/sarsonj/rodokmen-skill/commits/main).
 
@@ -136,7 +136,8 @@ skills/rodokmen/
 - Umí načíst **rodinný strom z MyHeritage** a dalších služeb (export GEDCOM, z MyHeritage i zálohu stromu z programu
   Family Tree Builder) a udělat z něj plán hledání.
 - Průběžně sbírá **zajímavosti** (svatby na poslední chvíli, rod sto let v jednom domě…) a s vámi napíše
-  **Příběh vašeho rodu** – hlavní článek webu.
+  **Příběh vašeho rodu** – hlavní článek webu. Příběhů může být víc (třeba otcovská a mateřská strana);
+  web pak má rozcestník Příběhy a na úvodní stránce tlačítko ke každému.
 - Claude čte staré písmo dobře, ale ne bezchybně. Proto ke každému zápisu ukládá výřez s vyznačeným místem,
   aby se to dalo zkontrolovat, a nejistá místa označuje otazníkem.
 - Placené služby (MyHeritage, Ancestry) Claude hromadně neprochází – vede to k zablokování účtu.

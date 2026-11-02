@@ -90,8 +90,14 @@ Viz `web.md`.
 - `research_log.md` – tabulka `| # | datum | zdroj | rozsah | hledáno | výsledek | citace |`, nové řádky na konec, i negativní.
   Web ji zobrazuje jako „Výzkumný deník“.
 - `zajimavosti.md` – `## Nadpis` + text, odkazy `[Jméno](/osoba/<slug>/)`.
-- `pribeh.md` – „Příběh <hlavního rodu>“: frontmatter `title`, `lead` + kapitoly `##`; když soubor neexistuje,
-  položka menu se skryje. Jak psát: `pribehy.md`.
+- `pribehy/<název>.md` – příběhy rodu („Příběh Novákových“), každý soubor jeden. Název souboru je adresa stránky
+  (`pribehy/novakovi.md` → `/pribehy/novakovi/`), proto jen malá písmena bez diakritiky, číslice a pomlčky.
+  Frontmatter: `title`, `lead`, volitelně `rod` (číslo rodu 8–15 – odkaz na stránku rodu a jeho dokumenty),
+  `poradi` (1, 2, … – pořadí v menu a na úvodu), `menu` a `tlacitko` (text položky menu / tlačítka); pak kapitoly `##`.
+  Jediný příběh je na `/pribehy/`, při víc příbězích je `/pribehy/` rozcestník. Bez příběhu se položka menu skryje.
+  Jak psát: `pribehy.md`.
+- `pribeh.md` – starší tvar jednoho příběhu (do verze 0.5.2), funguje dál: adresa `/pribehy/` (při víc příbězích
+  `/pribehy/pribeh/`), menu a tlačítko z `web.json` → `pribeh`. Nemusíš ho přesouvat.
 - Poznámky pro Clauda v markdownu piš jako `<!-- … -->` – na web nejdou.
 - `archivni_dotazy.md`, `udaje_od_rodiny.md` – volný text.
 

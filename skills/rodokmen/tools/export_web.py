@@ -70,6 +70,49 @@ def slugify(text):
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 
 
+def frontmatter(md):
+    """Jednoduché hodnoty z frontmatter (`klíč: hodnota`) – stačí na rod, poradi, menu, tlacitko; title a lead čte i Astro."""
+    m = re.match(r"---\s*\n(.*?)\n---", md, re.S)
+    out = {}
+    for line in (m.group(1).splitlines() if m else []):
+        k, sep, v = line.partition(":")
+        if sep and re.fullmatch(r"[a-z_]+", k.strip()):
+            v = v.strip()
+            if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+                v = v[1:-1]
+            out[k.strip()] = int(v) if re.fullmatch(r"-?\d+", v) else v
+    return out
+
+
+def stories(cfg):
+    """Příběhy webu: data/pribehy/*.md (slug = název souboru) a starý data/pribeh.md (slug „pribeh“).
+
+    Vrací seznam (slug, cesta, nastavení) v pořadí: podle web.json „pribehy“, pak „poradi“ z frontmatter, pak podle názvu.
+    Nastavení = frontmatter, přes ně položka z web.json „pribehy“ (soubor = slug); u starého pribeh.md i web.json „pribeh“.
+    """
+    found = []
+    legacy = os.path.join(DATA, "pribeh.md")
+    if os.path.exists(legacy):
+        found.append(("pribeh", legacy, dict(cfg.get("pribeh") or {})))
+    folder = os.path.join(DATA, "pribehy")
+    if os.path.isdir(folder):
+        for f in sorted(os.listdir(folder)):
+            if f.endswith(".md") and not f.startswith((".", "_")):
+                slug = slugify(f[:-3])
+                if slug and slug not in [s for s, _, _ in found]:
+                    found.append((slug, os.path.join(folder, f), {}))
+    order = [slugify(str(e.get("soubor", ""))) for e in (cfg.get("pribehy") or []) if isinstance(e, dict)]
+    over = {slugify(str(e.get("soubor", ""))): e for e in (cfg.get("pribehy") or []) if isinstance(e, dict)}
+    out = []
+    for i, (slug, path, extra) in enumerate(found):
+        fm = frontmatter(open(path, encoding="utf-8").read())
+        opts = {**fm, **extra, **{k: v for k, v in over.get(slug, {}).items() if k != "soubor"}}
+        poradi = opts.get("poradi") if isinstance(opts.get("poradi"), int) else 1000
+        out.append(((order.index(slug) if slug in order else len(order), poradi, slug != "pribeh", str(fm.get("title", slug))),
+                    slug, path, opts))
+    return [(slug, path, opts) for _, slug, path, opts in sorted(out)]
+
+
 def norm_answer(text):
     """Stejná normalizace jako v prihlaseni.html: bez diakritiky, malá písmena, jen a-z0-9."""
     t = unicodedata.normalize("NFD", text)
@@ -355,10 +398,12 @@ def main():
                        items=[dict(name=a, text=b) for a, b in h.get("polozky", [])],
                        records=[r for r in h.get("zaznamy", []) if r in recs]) for h in ns["HYPOTEZY"]]
 
-    has_story = os.path.exists(os.path.join(DATA, "pribeh.md"))
+    story_list = stories(cfg)
     public_cfg = {k: v for k, v in cfg.items() if k != "prihlaseni"}
-    public_cfg["maPribeh"] = has_story
-    site = dict(config=public_cfg, places=places, root=slugs[1], aliases={a: slugs[a] for a in SAME}, people=people,
+    public_cfg["maPribeh"] = bool(story_list)
+    site = dict(config=public_cfg, places=places,
+                stories=[dict(slug=s, rod=o.get("rod") if isinstance(o.get("rod"), int) else None,
+                              menu=str(o.get("menu") or ""), tlacitko=str(o.get("tlacitko") or "")) for s, _, o in story_list], root=slugs[1], aliases={a: slugs[a] for a in SAME}, people=people,
                 families=families, records=records, lines=lines,
                 issues=[dict(title=i, text="") if isinstance(i, str) else dict(title=i[0], text=i[1]) for i in ISSUES], stats=stats, hypotheses=hypotheses,
                 docs=[dict(img=d["img"], caption=d["popis"], people=[slugs[k] for k in d.get("osoby", []) if k in slugs])
@@ -370,8 +415,12 @@ def main():
         path = os.path.join(DATA, src)
         text = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
         write(os.path.join(gen_dir, dst), strip_comments(re.sub(r"^# .*\n", "", text, count=1)))
-    story = os.path.join(DATA, "pribeh.md")
-    write(os.path.join(gen_dir, "pribeh.md"), strip_comments(open(story, encoding="utf-8").read()) if has_story else "---\ntitle: Příběh\nlead: ''\n---\n")
+    story_dir = os.path.join(gen_dir, "pribehy")   # web/src/pages/pribehy/ je čte všechny (import.meta.glob)
+    shutil.rmtree(story_dir, ignore_errors=True)
+    for slug, path, _ in story_list:
+        write(os.path.join(story_dir, slug + ".md"), strip_comments(open(path, encoding="utf-8").read()))
+    if os.path.exists(os.path.join(gen_dir, "pribeh.md")):   # z verzí do 0.5.2
+        os.remove(os.path.join(gen_dir, "pribeh.md"))
 
     hrefs = os.path.join(gen_dir, "fan_hrefs.json")
     json.dump({k: f"/osoba/{s}/" for k, s in slugs.items()}, open(hrefs, "w", encoding="utf-8", newline="\n"))
@@ -405,12 +454,14 @@ def main():
           f"zkopírováno {copied} obrázků; přihlášení {'zapnuté' if gated else 'VYPNUTÉ (web je otevřený)'}")
 
     # odkazy v textech, které nikam nevedou (adresa osoby se změní třeba doplněním roku narození: jan-novak → jan-novak-1798)
-    targets = dict(osoba=people, zdroj=recs, rod=lines, rodina=families)
-    texts = {f: open(os.path.join(gen_dir, f), encoding="utf-8").read() for f in ("pribeh.md", "zajimavosti.md")}
+    targets = dict(osoba=people, zdroj=recs, rod=lines, rodina=families, pribehy={s for s, _, _ in story_list})
+    texts = {os.path.relpath(path, DATA).replace(os.sep, "/"): open(os.path.join(story_dir, slug + ".md"), encoding="utf-8").read()
+             for slug, path, _ in story_list}
+    texts["zajimavosti.md"] = open(os.path.join(gen_dir, "zajimavosti.md"), encoding="utf-8").read()
     texts["web.json"] = json.dumps(cfg, ensure_ascii=False)
     texts["osoby.py (hypotézy)"] = json.dumps(hypotheses, ensure_ascii=False)
     broken = [(f, m.group(0)) for f, t in texts.items()
-              for m in re.finditer(r"/(osoba|zdroj|rod|rodina)/([^/\s)\"'#?<>\]]+)", t) if m.group(2) not in targets[m.group(1)]]
+              for m in re.finditer(r"(?<![\w/-])/(osoba|zdroj|rod|rodina|pribehy)/([^/\s)\"'#?<>\]]+)", t) if m.group(2) not in targets[m.group(1)]]
     for f, link in dict.fromkeys(broken):
         print(f"POZOR: nefunkční odkaz {link}/ v {f} – oprav ho (adresy stránek jsou ve web/src/data/site.json)")
 

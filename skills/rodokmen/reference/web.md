@@ -1,7 +1,8 @@
 # Rodinný web – stavba, nastavení, zveřejnění
 
 Web je statický (Astro + vyhledávání Pagefind), data bere z `data/` přes `tools/export_web.py`.
-Stránky: úvod (lákadlo, statistiky, zajímavosti, mapa, rody, vějíř), příběh, zajímavosti, rody, stránka rodu,
+Stránky: úvod (lákadlo, statistiky, zajímavosti, mapa, rody, vějíř), příběh (při víc příbězích rozcestník
+`/pribehy/` a stránka každého příběhu `/pribehy/<název>/`), zajímavosti, rody, stránka rodu,
 mapa (OpenStreetMap), vějíř přes celou obrazovku s hledáním, seznam předků, zápisy (s výřezem, rámečkem, přepisem
 a překladem), stránka osoby, rodiny, „Co hledáme“, výzkumný deník, hledání.
 
@@ -26,7 +27,7 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
  "kontakt": {"jmeno": "Petrovi", "email": "petr@example.cz"},
  "prihlaseni": {"uvod": "Tenhle web je jen pro rodinu.", "otazka": "Jak se jmenoval pes u babičky v Holicích?", "odpoved": "Alík"},
  "uvod": {"nadpis": "Lákavý nadpis", "odstavce": ["2–3 věty, které chytí"], "foto": "klic_obrazku_ve_vyrezech", "foto_popis": "…"},
- "pribeh": {"menu": "Příběh Nováků", "rod": 8, "tlacitko": "Přečíst příběh Nováků"},
+ "pribehy": [{"soubor": "novakovi", "menu": "Příběh Nováků", "tlacitko": "Přečíst příběh Nováků"}, {"soubor": "dvorakovi"}],
  "zajimavosti_na_uvodu": [{"nadpis": "Nejstarší předek", "text": "Kovář Jan, asi 1825."}]
 }
 ```
@@ -38,8 +39,16 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   skončí chybou; otevřený web jen výslovně přes `"otevreny": true` v `prihlaseni`.
   Je to lehká ochrana proti náhodným návštěvníkům, ne bankovní zabezpečení – citlivé věci na web nepatří.
 - `uvod.foto` = klíč obrázku ve `vyrezy/` (ulož přes `vyrez.py`).
-- `pribeh`: `menu` a `tlacitko` pojmenuj podle hlavního rodu („Příběh Novákových“), `rod` = číslo rodu (8–15).
-  Bez vyplněného `uvod` ukáže úvodní stránka aspoň název a `lead` příběhu. Viz `pribehy.md`.
+- **Příběhy** (`data/pribehy/*.md`, viz `pribehy.md`) se nastavují hlavně ve frontmatter (`title`, `lead`, `rod`, `poradi`,
+  `menu`, `tlacitko`). `pribehy` ve `web.json` je nepovinné: pořadí příběhů (`soubor` = název souboru bez `.md`)
+  a přepsání `menu`/`tlacitko`/`rod`. `pribehy_menu` = text položky menu při víc příbězích (výchozí „Příběhy“).
+  Jeden příběh: v menu jeho `menu` (výchozí „Příběh rodu“), adresa `/pribehy/`. Víc příběhů: v menu rozcestník
+  `/pribehy/` s názvy a leady, každý příběh na `/pribehy/<soubor>/`, na úvodu tlačítko ke každému (`tlacitko`,
+  jinak „Přečíst: <title>“). Adresa `/pribehy/<soubor>/` funguje i při jediném příběhu (přesměruje na `/pribehy/`),
+  takže odkazy v textech vydrží přidání dalšího příběhu. Odkazy mezi příběhy piš `[Příběh Dvořáků](/pribehy/dvorakovi/)`.
+- Starý klíč `pribeh` (`{"menu", "rod", "tlacitko"}`) platí dál pro starý `data/pribeh.md`.
+  Bez vyplněného `uvod` ukáže úvodní stránka aspoň název a `lead` každého příběhu.
+- `npm run data` hlásí `POZOR: nefunkční odkaz …` i v příbězích (osoby, `/zdroj/<klíč>/`, rody, rodiny, `/pribehy/<soubor>/`).
 - Šablona `web.json` je prázdná – název nastav hned, jak znáš příjmení výchozí osoby (`kontrola.py` hlásí zbytky ukázky).
 - `citlive_schvaleno`: seznam úryvků textu, které uživatel na webu schválil (např. `["oběsil se ve stodole"]`) –
   `kontrola.py` je pak nehlásí jako `CITLIVÉ`. Úryvek musí obsahovat hlášené slovo; když se text změní, hlásí se znovu.

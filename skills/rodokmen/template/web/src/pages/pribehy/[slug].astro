@@ -1,0 +1,14 @@
+---
+// /pribehy/<slug>/ – při jediném příběhu jen přesměrování na /pribehy/ (odkazy zůstanou platné i po přidání dalšího).
+import Base from '../../layouts/Base.astro';
+import Story from '../../components/Story.astro';
+import { stories, manyStories } from '../../lib/pribehy.js';
+export function getStaticPaths() {
+  return stories.map((story) => ({ params: { slug: story.slug }, props: { story } }));
+}
+const { story } = Astro.props;
+if (!manyStories) return Astro.redirect('/pribehy/');
+---
+<Base title={story.title}>
+  <Story story={story} />
+</Base>

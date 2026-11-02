@@ -1,28 +1,45 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { docs, config, lineByK, href } from '../../lib/data.js';
-import { Content, frontmatter } from '../../generated/pribeh.md';
-const line = lineByK[config.pribeh?.rod ?? 8];
+import Story from '../../components/Story.astro';
+import { docs, lineByK } from '../../lib/data.js';
+import { stories, manyStories, storyHref } from '../../lib/pribehy.js';
+const title = stories.length === 1 ? stories[0].title : 'Příběhy';
 ---
-<Base title={frontmatter.title}>
-  <p class="crumbs">{line && <><a href={href.line(line.slug)}>rod {line.name}</a> · </>}<a href="/zajimavosti/">další zajímavosti</a></p>
-  <h1>{frontmatter.title}</h1>
-  {frontmatter.lead && <p class="lead">{frontmatter.lead}</p>}
-  <div class="prose"><Content /></div>
+<Base title={title}>
+  {stories.length === 1 && <Story story={stories[0]} />}
 
-  <div class="next-step">
-    <p><strong>Chcete víc?</strong> Další objevy z rodokmenu najdete v zajímavostech.</p>
-    <a class="btn" href="/zajimavosti/">Zajímavosti z rodokmenu →</a>
-  </div>
-
-  {docs.length > 0 && (
+  {stories.length === 0 && (
     <>
-      <h2>Rodinné dokumenty a fotografie</h2>
-      <div class="docs">
-        {docs.map((d) => (
-          <figure><a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a><figcaption>{d.caption}</figcaption></figure>
-        ))}
+      <h1>Příběhy</h1>
+      <p>Příběh rodu se teprve píše. Zatím se podívejte do <a href="/zajimavosti/">zajímavostí</a>.</p>
+    </>
+  )}
+
+  {manyStories && (
+    <>
+      <p class="crumbs"><a href="/zajimavosti/">zajímavosti z rodokmenu</a></p>
+      <h1>Příběhy</h1>
+      <div class="grid2">
+        {stories.map((s) => {
+          const line = lineByK[s.rod];
+          return (
+            <a class={`card card-link${line ? ' line-card' : ''}`} style={line ? `--c:${line.color}` : undefined} href={storyHref(s)}>
+              <h3>{s.title}</h3>
+              {s.lead && <p class="small muted">{s.lead}</p>}
+            </a>
+          );
+        })}
       </div>
+      {docs.length > 0 && (
+        <>
+          <h2>Rodinné dokumenty a fotografie</h2>
+          <div class="docs">
+            {docs.map((d) => (
+              <figure><a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a><figcaption>{d.caption}</figcaption></figure>
+            ))}
+          </div>
+        </>
+      )}
     </>
   )}
 </Base>

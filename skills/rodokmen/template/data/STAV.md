@@ -17,7 +17,7 @@ pak konec `research_log.md` a sekci „Rozpracováno“.
 | `data/zvyrazneni.json` | Rámečky – které místo výřezu čteme. |
 | `data/research_log.md` | Deník VŠECH hledání, i neúspěšných. |
 | `data/udaje_od_rodiny.md` | Co řekla rodina, rodinné dokumenty. |
-| `data/zajimavosti.md`, `data/pribeh.md` | Texty na web. |
+| `data/zajimavosti.md`, `data/pribehy/*.md` | Texty na web (příběhy: každý soubor jeden). |
 | `data/archivni_dotazy.md` | Co by šlo zjistit jen v archivu. |
 | `data/mista.json`, `data/dokumenty.json`, `data/web.json` | Mapa, rodinné fotky a dokumenty, nastavení webu. |
 | `vyrezy/`, `zdroje/` | Výřezy zápisů pro web (1800 px) a v plném rozlišení. |

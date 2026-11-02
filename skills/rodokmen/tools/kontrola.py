@@ -135,7 +135,21 @@ def main():
         roky = [int(y) for y in re.findall(r"\b1[5-9]\d\d|20\d\d\b", p.get("y", "") + " " + text)]
         texty.append((f"osoba {k}", text + (f" {hranice}" if roky and min(roky) >= 1870 or k < 8 else "")))
     texty += [(f"boční příbuzný {s.get('n')}", s.get("n", "") + " " + s.get("t", "")) for s in SIDE]
-    for f in ("zajimavosti.md", "pribeh.md"):
+    pribehy_dir = os.path.join(DATA, "pribehy")
+    pribehy = [f for f in ("pribeh.md",) if os.path.exists(os.path.join(DATA, f))]
+    pribehy += ["pribehy/" + f for f in sorted(os.listdir(pribehy_dir))
+                if f.endswith(".md") and not f.startswith((".", "_"))] if os.path.isdir(pribehy_dir) else []
+    for f in pribehy:
+        jmeno = os.path.basename(f)[:-3]
+        text = open(os.path.join(DATA, f), encoding="utf-8").read()
+        if f != "pribeh.md" and not re.fullmatch(r"[a-z0-9]+(-[a-z0-9]+)*", jmeno):
+            warn.append(f"{f}: název souboru je i adresa stránky (/pribehy/<název>/) – použij jen malá písmena "
+                        f"bez diakritiky, číslice a pomlčky (např. sustrovi.md)")
+        if not re.match(r"---\s*\n(?:.*\n)*?title:\s*\S", text.split("\n---", 1)[0] + "\n"):
+            warn.append(f"{f}: chybí frontmatter s title (---, title: …, lead: …, ---) – viz reference/pribehy.md")
+    if "pribeh.md" in pribehy and "pribehy/pribeh.md" in pribehy:
+        warn.append("data/pribeh.md i data/pribehy/pribeh.md – oba by měly adresu /pribehy/pribeh/; přesuň pribeh.md do pribehy/ pod jiným názvem")
+    for f in ["zajimavosti.md"] + pribehy:
         if os.path.exists(os.path.join(DATA, f)):
             texty += [(f, odst) for odst in open(os.path.join(DATA, f), encoding="utf-8").read().split("\n\n")]
     for kde, text in texty:
@@ -147,12 +161,12 @@ def main():
                         f"zeptej se uživatele, jestli to tam smí být (reference/soukromi.md); když ano, "
                         f"přidej úryvek textu s tím slovem do web.json „citlive_schvaleno“")
 
-    if not os.path.exists(os.path.join(DATA, "pribeh.md")) and LINES:
+    if not pribehy and LINES:
         hlavni = min(LINES)
         n = max((k.bit_length() for k in P if k >= 8 and k >> (k.bit_length() - 4) == hlavni), default=0)
         if n >= 6:
             warn.append(f"rod {LINES[hlavni][0]} má už {n} generací – je čas napsat příběh rodu "
-                        f"(data/pribeh.md, reference/pribehy.md); koncept nejdřív ukaž uživateli v chatu")
+                        f"(data/pribehy/<název>.md, reference/pribehy.md); koncept nejdřív ukaž uživateli v chatu")
 
     log = os.path.join(DATA, "research_log.md")
     rows = sum(1 for l in open(log, encoding="utf-8") if re.match(r"^\| \d+ \|", l)) if os.path.exists(log) else 0

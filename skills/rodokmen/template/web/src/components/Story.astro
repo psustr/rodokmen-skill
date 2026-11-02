@@ -1,0 +1,42 @@
+---
+// Jeden příběh (stránka /pribehy/ při jediném příběhu, jinak /pribehy/<slug>/).
+import { docs, lineByK, lines, href } from '../lib/data.js';
+import { stories, manyStories, storyHref } from '../lib/pribehy.js';
+const { story } = Astro.props;
+const { Content } = story;
+const line = lineByK[story.rod ?? (manyStories ? 0 : 8)];
+const others = stories.filter((s) => s.slug !== story.slug);
+// u víc příběhů jen dokumenty osob z rodu příběhu (bez rodu všechny)
+const inLine = line ? new Set(line.people) : null;
+const shown = manyStories && inLine ? docs.filter((d) => d.people.some((p) => inLine.has(p))) : docs;
+---
+<p class="crumbs">
+  {manyStories && <><a href="/pribehy/">všechny příběhy</a> · </>}
+  {line && <><a href={href.line(line.slug)}>rod {line.name}</a> · </>}
+  <a href="/zajimavosti/">další zajímavosti</a>
+</p>
+<h1>{story.title}</h1>
+{story.lead && <p class="lead">{story.lead}</p>}
+<div class="prose"><Content /></div>
+
+{others.length > 0 && (
+  <div class="next-step">
+    <p><strong>{others.length === 1 ? 'Další příběh' : 'Další příběhy'}:</strong> {others.map((s) => s.title).join(', ')}</p>
+    {others.map((s) => <a class="btn" href={storyHref(s)}>{s.tlacitko || `Přečíst: ${s.title}`} →</a>)}
+  </div>
+)}
+<div class="next-step">
+  <p><strong>Chcete víc?</strong> Další objevy z rodokmenu najdete v zajímavostech.</p>
+  <a class="btn" href="/zajimavosti/">Zajímavosti z rodokmenu →</a>
+</div>
+
+{shown.length > 0 && (
+  <>
+    <h2>Rodinné dokumenty a fotografie</h2>
+    <div class="docs">
+      {shown.map((d) => (
+        <figure><a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a><figcaption>{d.caption}</figcaption></figure>
+      ))}
+    </div>
+  </>
+)}
