@@ -23,9 +23,11 @@ for id in "$@"; do
   else
     js "location.href='https://www.mza.cz/actapublica/matrika/detail/$id';'ok'" >/dev/null
   fi
-  for i in {1..30}; do sleep 2
-    n=$(js 'location.href.indexOf("detail/'$id'")>0 ? (document.documentElement.outerHTML.match(/iip-srv/g)||[]).length : 0' | tr -d '\r')
-    [[ $n != 0 && $n != 0.0 && $n != NO-TAB ]] && break
+  prev=x
+  for i in {1..40}; do sleep 2   # čekej, až se stránka načte celá (počet snímků se dvakrát po sobě nezmění)
+    n=$(js 'location.href.indexOf("detail/'$id'")>0 && document.readyState=="complete" ? (document.documentElement.outerHTML.match(/iip-srv/g)||[]).length : 0' | tr -d '\r')
+    [[ $n != 0 && $n != 0.0 && $n != NO-TAB && $n == $prev ]] && break
+    prev=$n
   done
   js 'Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.txt
   echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
