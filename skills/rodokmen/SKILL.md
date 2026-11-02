@@ -33,18 +33,19 @@ Najdeš v ní `tools/` (nástroje), `template/` (šablona projektu a webu) a `re
    a podle výpisu převezmi ze zálohy případné úpravy vzhledu (viz `reference/web.md`). Odmítne-li, připomeň to až příště.
 2. Projekt ještě není → **Fáze 0**.
 
-## Krátká sezení (průběžné ukládání a `/clear`)
+## Šetrně s přenosem dat a průběžné ukládání (automaticky, bez zásahu uživatele)
 Model si mezi kroky nic nepamatuje – Claude Code mu při **každém** kroku posílá celou dosavadní konverzaci, včetně
-všech prohlédnutých výřezů snímků. Dlouhé sezení proto znamená velký přenos dat (upload), pomalejší práci a nakonec
-chybu „Input Too Long“; když spadne pomocník nebo sezení, ztratí se, co nebylo zapsané. Proto:
+všech prohlédnutých výřezů snímků. Výřezy proto nejvíc zvětšují přenos dat (upload) a zkracují sezení („Input Too Long“).
+Uživatele tím nezatěžuj (žádné ruční `/clear`), jen pracuj úsporně:
+- **Výřezy jen pro čtení/ověření dělej malé:** šedotónově, ~1000 px na šířku, JPEG ~70, pokud jde jen jeden výřez na zápis
+  (`magick in.jpg -crop … -colorspace Gray -resize 1000x -quality 70 out.jpg`; u Porta fontium rovnou `snimek … x0,y0,x1,y1`).
+  Celou stránku si prohlížej jen zmenšenou (orientace). **Výřezy pro web tím nejsou dotčené** – `vyrez.py` je dělá z plného rozlišení.
+- **Ověřuj cíleně:** jména, data, čísla domů a přípisy – ne každý zápis po polovinách, když je čitelný na jednom výřezu.
+- **Procházení knih nech pomocníkům** (jejich konverzace po skončení zaniká); hlavní konverzace dostane jen výsledek
+  a pár ověřovacích výřezů. Pomocníkům dej stejná pravidla pro malé výřezy.
 - **Každých ~15 minut a po každém nálezu** aktualizuj v `data/STAV.md` sekci „Rozpracováno“ (co je hotové, co běží,
-  přesný další krok – archiv, kniha, snímek) a ulož (`git commit`).
-- **Po každém dokončeném milníku** (zapsané kolo pomocníků, uzavřená větev) napiš do `STAV.md` krátkou předávku
-  a řekni uživateli: „Teď je vhodná chvíle na `/clear` – pak napište ‚pokračuj v rodokmenu‘.“ Nová konverzace naváže
-  ze `STAV.md` a deníku. Na začátku projektu to uživateli vysvětli jednou větou.
-- Výřezy, které si prohlížíš jen kvůli čtení/ověření, dělej malé (šedotónově, ~1000 px, JPEG ~70, jeden výřez na zápis,
-  kde to jde). **Výřezy pro web tím nejsou dotčené** – `vyrez.py` je dělá z plného rozlišení.
-- Pomocníci zapisují výsledky do souboru průběžně po každém snímku (viz Pomocníci) – jejich výpadek pak nic neztratí.
+  přesný další krok – archiv, kniha, snímek) a ulož (`git commit`). Pomocníci zapisují výsledky průběžně do souborů.
+  Když se sezení samo zkrátí nebo spadne, nová konverzace naváže ze `STAV.md` a nic se neztratí.
 
 ## Fáze 0 – Příprava (jednou)
 1. Zkontroluj nástroje: `python3 --version` (≥ 3.9), `node --version` (≥ 20), `magick -version` (ImageMagick 7; je-li jen

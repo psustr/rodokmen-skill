@@ -6,5 +6,5 @@ Tohle je projekt rodokmenu vedený skillem **rodokmen**. Na začátku každé ko
 3. Pokračuj tam, kde se skončilo. Komunikuj česky, stručně a srozumitelně pro člověka bez zkušeností s genealogií a programováním.
 4. Co by šlo ve skillu zlepšit (chyby nástrojů, nové archivy, nápady), zapisuj do `poznamky_pro_skill.md` – viz skill, sekce „Poznámky pro správce skillu“.
 
-## Krátká sezení
-Po každém milníku zapiš předávku do `data/STAV.md` („Rozpracováno“), ulož (git) a navrhni uživateli `/clear`; pak se pokračuje větou „pokračuj v rodokmenu“. Výřezy jen pro čtení malé, výřezy pro web z plného rozlišení (`tools/vyrez.py`).
+## Šetrně s přenosem dat
+Výřezy jen pro čtení malé (šedotónově, ~1000 px, JPEG ~70), výřezy pro web z plného rozlišení (`tools/vyrez.py`). Procházení knih nech pomocníkům. `data/STAV.md` aktualizuj průběžně (~15 min) a ukládej – uživatel nic ručně nespouští.
