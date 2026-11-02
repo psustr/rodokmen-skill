@@ -33,6 +33,19 @@ Najdeš v ní `tools/` (nástroje), `template/` (šablona projektu a webu) a `re
    a podle výpisu převezmi ze zálohy případné úpravy vzhledu (viz `reference/web.md`). Odmítne-li, připomeň to až příště.
 2. Projekt ještě není → **Fáze 0**.
 
+## Krátká sezení (průběžné ukládání a `/clear`)
+Model si mezi kroky nic nepamatuje – Claude Code mu při **každém** kroku posílá celou dosavadní konverzaci, včetně
+všech prohlédnutých výřezů snímků. Dlouhé sezení proto znamená velký přenos dat (upload), pomalejší práci a nakonec
+chybu „Input Too Long“; když spadne pomocník nebo sezení, ztratí se, co nebylo zapsané. Proto:
+- **Každých ~15 minut a po každém nálezu** aktualizuj v `data/STAV.md` sekci „Rozpracováno“ (co je hotové, co běží,
+  přesný další krok – archiv, kniha, snímek) a ulož (`git commit`).
+- **Po každém dokončeném milníku** (zapsané kolo pomocníků, uzavřená větev) napiš do `STAV.md` krátkou předávku
+  a řekni uživateli: „Teď je vhodná chvíle na `/clear` – pak napište ‚pokračuj v rodokmenu‘.“ Nová konverzace naváže
+  ze `STAV.md` a deníku. Na začátku projektu to uživateli vysvětli jednou větou.
+- Výřezy, které si prohlížíš jen kvůli čtení/ověření, dělej malé (šedotónově, ~1000 px, JPEG ~70, jeden výřez na zápis,
+  kde to jde). **Výřezy pro web tím nejsou dotčené** – `vyrez.py` je dělá z plného rozlišení.
+- Pomocníci zapisují výsledky do souboru průběžně po každém snímku (viz Pomocníci) – jejich výpadek pak nic neztratí.
+
 ## Fáze 0 – Příprava (jednou)
 1. Zkontroluj nástroje: `python3 --version` (≥ 3.9), `node --version` (≥ 20), `magick -version` (ImageMagick 7; je-li jen
    verze 6 s příkazem `convert`, nástroje ji mimo Windows použijí samy), `git --version`.
