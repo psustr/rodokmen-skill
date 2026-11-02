@@ -63,6 +63,13 @@ def main():
     for k in LINES:
         if k not in range(8, 16):
             err.append(f"LINES: rod {k} – rody mají čísla 8 až 15 (pradědečci a prababičky)")
+    real = [k for k in range(8, 16) if k in P and P[k].get("st") != "unk"]
+    if real and not LINES:
+        warn.append(f"LINES je prázdné, ale pradědečků a prababiček (č. 8–15) je {len(real)} – stránka „Rody“ na webu "
+                    "bude prázdná. Doplňte LINES = {8: (\"Novákové\", \"krátký popis rodu\"), …}")
+    for s in SIDE:
+        if s.get("k") not in P:
+            err.append(f"SIDE: {s.get('n')} – předek k={s.get('k')} neexistuje")
 
     cited = {r for p in P.values() for r in p.get("r", [])} | {r for s in SIDE for r in s.get("r", [])}
     for z in zaz:
@@ -85,6 +92,9 @@ def main():
         if k not in cited:
             warn.append(f"zápis {k}: necituje ho žádná osoba (doplnit do 'r' u osoby nebo bočního příbuzného)")
 
+    if not jload("mista.json", {}) and len(P) > 3:
+        warn.append("data/mista.json je prázdné – mapa na webu bude prázdná. Přidejte obce předků: "
+                    "python3 -I tools/mista.py pridej \"Obec\" (u stejnojmenných obcí s okresem), pak python3 -I tools/mista.py")
     for name, e in jload("mista.json", {}).items():
         if "lat" not in e:
             warn.append(f"místo {name}: nemá souřadnice (spusťte tools/mista.py)")

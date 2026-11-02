@@ -10,8 +10,8 @@ Matriky jsou online u osmi státních archivů – podle toho, **kde předci ži
 | SOA Třeboň | jižní Čechy | digi.ceskearchivy.cz | **ano – nástroj `trebon.py`** |
 | SOA Litoměřice | severní Čechy | Digitální badatelna – digi.soalitomerice.cz | **částečně – `soal_zoomify.py`** (knihu najdi v prohlížeči) |
 | AHMP | hl. m. Praha | katalog.ahmp.cz (Pragapublica) | **ano – `ahmp_search.sh`, `ahmp_scan.py`** |
-| MZA Brno | jižní Morava, Vysočina z části | Acta Publica – www.mza.cz/actapublica | částečně – v prohlížeči (postup níže) |
-| ZA Opava | severní Morava a Slezsko, Olomoucko a Litovelsko | Digitální badatelna – digi.archives.cz/da/ | **částečně – `soal_zoomify.py`** (jen s prohlížečem, CAPTCHU řeší uživatel) |
+| MZA Brno | jižní Morava, Vysočina z části | Acta Publica – www.mza.cz/actapublica | **ano – `mza.py`** (od 11/2026 s ověřením přes Safari: `mza_safari.sh`) |
+| ZA Opava | severní Morava a Slezsko, Olomoucko a Litovelsko | Digitální badatelna – digi.archives.cz/da/ | **ano na macOS – `opava_safari.sh` + `soal_zoomify.py`**; jinak s prohlížečem (CAPTCHU řeší uživatel) |
 | Národní archiv | židovské matriky (HBMa), soupisy; pražské policejní přihlášky 1850–1914 | badatelna.eu; digi.nacr.cz/prihlasky2 | přihlášky **ano – `policie_prihlasky.py`** |
 
 Adresy u nevyzkoušených portálů ověř při prvním použití (portály se mění). Pro pohraničí a mimo ČR viz `playbook.md` §2
@@ -102,10 +102,17 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
 
 ## ZA Opava (severní Morava, Slezsko, Olomoucko, Litovelsko) – `tools/soal_zoomify.py`
 - Pozor na hranici: obce na Litovelsku a Olomoucku patří pod **ZA Opava**, ne pod MZA Brno.
-- **Bez prohlížeče to nejde.** Badatelna `https://digi.archives.cz/da/` (stará adresa matriky.archives.cz jen přesměruje)
+- **Na macOS přes Safari (vyzkoušeno, bez CAPTCHy):** uživatel jednou zapne Safari → Nastavení → Pokročilé „Zobrazovat
+  funkce pro webové vývojáře“ a Vývojář → „Povolit JavaScript z událostí Apple“ (dej mu přesný postup). Pak
+  `tools/opava_safari.sh hledat "Obec"` (seznam matrik), `otevri "Obec" "Př VIII 45"` (otevře knihu a uloží ID snímků),
+  `adresa PrVIII45 125` (adresa obrázku pro `soal_zoomify.py`), `adresy PrVIII45 100 230` (pomalu celý rozsah – pak pomocník
+  stahuje jen z images.archives.cz, bez prohlížeče a souběžně s jinou prací). Skript pracuje jen v kartě s digi.archives.cz,
+  uživatel může Safari dál používat; ať tu kartu nezavírá. Relace vyprší asi po hodině → znovu `otevri`.
+- **Jinak bez prohlížeče to nejde.** Badatelna `https://digi.archives.cz/da/` (stará adresa matriky.archives.cz jen přesměruje)
   má ochranu proti robotům – curl ani WebFetch se nedostanou ani na hledání. Potřebuješ připojený prohlížeč (Claude in
   Chrome – uživatel ho připojí příkazem `/chrome` – nebo Playwright); jinak ať knihu najde a snímky uloží uživatel.
   Úvodní ověření projde samo, ale hledání často skončí **CAPTCHou: tu vyřeší uživatel** v okně prohlížeče, ty nikdy.
+- Farnosti mají samostatné **rejstříky** (signatury s „I-N“, „I-O“, „I-Z“) – rychlejší než listovat knihou po obcích.
 - Hledej obec a vyfiltruj Matriky (ikona, potom znovu lupa). Hledání vrací i civilní matriky (u obce stovky svazků) –
   filtr „Datum od – do“ (podle začátku svazku, např. 1680–1873) nechá jen církevní. Knihy bývají řazené po obcích
   a na konci mají rejstřík. Vedle farních knih bývají i **druhopisy** („T“ v signatuře, viz `matriky.md`).
@@ -125,12 +132,18 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   po hledání a stránky výsledků neprocházej za sebou. Delší smyčku pusť v prohlížeči na pozadí, výsledky ukládej do
   `window` nebo `localStorage` a vyzvedávej po částech (nástroj pro JavaScript má limit asi 45 s). Pomocníkům to napiš do zadání.
 
-## MZA Brno (jižní Morava, Acta Publica) – bez nástroje
+## MZA Brno (jižní Morava, Acta Publica) – `tools/mza.py`
 - Portál `https://www.mza.cz/actapublica/`, bez přihlášení. Adresa actapublica.eu bývá za Cloudflare zablokovaná
-  („Sorry, you have been blocked“ – podle IP, i v běžném prohlížeči); když blokuje i mza.cz, ať uživatel vypne VPN
-  nebo zkusí jinou síť.
-- Knihu najdi v prohlížeči podle obce nebo fary. Snímky jsou IIIF: adresu obrázku najdi v síťovém provozu a stáhni ji
-  přes `curl` (Python dostane HTTP 426). Dál podle „Ostatní portály“ níže.
+  („Sorry, you have been blocked“ – podle IP); když blokuje i mza.cz, ať uživatel vypne VPN nebo zkusí jinou síť.
+- `python3 -I tools/mza.py hledat "Obec"` → knihy obce (id | č. knihy | fara | roky N/O/Z | snímků); `info <id>`;
+  `snimek <id> <pořadí> out.jpg [-1]` (-1 = poloviční rozlišení); starý odkaz actapublica.eu převede `prevod`.
+- **Od 11/2026 ověření „nejste robot“ (altcha) a podepsané adresy obrázků** (`/iip-srv/iipsrv.fcgi/<platnost>/<podpis>?Deepzoom=…`,
+  každý snímek zvlášť, platí ~30 minut). curl dostane jen bránu. Ověření neřeš ani neobcházej – otevři knihu v uživatelově
+  prohlížeči, kde projde samo: na macOS `tools/mza_safari.sh <id> [<id>…]` (Safari, JavaScript z událostí Apple – viz ZA Opava)
+  uloží podepsané adresy všech snímků do `pracovni/mza_paths/<id>.txt` a `mza.py snimek` je pak použije. Když vypršely,
+  `mza.py` to řekne – spusť `mza_safari.sh` znovu. Pomocníkům to napiš do zadání (smí ho spouštět sami, jen jeden najednou).
+  Bez macOS: totéž v Claude in Chrome / Playwrightu (adresy jsou v HTML stránky knihy, `iip-srv…\.jp2\.dzi`).
+- Knihy farností bývají po obcích, každý oddíl má vlastní foliaci a často **vlastní rejstřík za oddílem**.
 
 ## Pražské policejní přihlášky 1850–1914 (Národní archiv) – `tools/policie_prihlasky.py`
 - Karty pražských rodin: hlava rodiny, manželka s rokem a místem narození, děti s roky, adresy, někdy místo sňatku.
