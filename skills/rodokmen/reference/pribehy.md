@@ -85,6 +85,13 @@ Ostatní rody zmiň tam, kde se s hlavní linií potkají (svatba, dům, řemesl
 Postup je stejný: materiál → koncept do chatu → schválení → soubor. Příběhy nemají opakovat stejné kapitoly –
 dnešek a rodiče výchozí osoby patří do obou, ale stručně; podrobně jen v jednom a v druhém odkaz
 `[Příběh Novákových](/pribehy/novakovi/)`.
+Osvědčený postup (projekt Šustrových, 11/2026): koncepty napiše pomocník do `pracovni/pribehy_koncept/` (bez snímků,
+jen z `osoby.py`, `zajimavosti.md`, shrnutí zápisů; ověří slugy odkazů v `site.json`; za čarou seznam „z matrik /
+od rodiny či Geni / vynecháno“ a nejasnosti v datech). Hlavní model z nich uživateli shrne osnovu a citlivá místa
+(nemanželské dítě, příbuzenské sňatky, příčiny smrti) a nechá si je schválit; doplněk existujícího příběhu vloží
+před kapitolu „Dnes“, nový příběh jako `data/pribehy/<název>.md` s `menu`, `tlacitko`, `rod`, `poradi` ve frontmatter.
+Starý `data/pribeh.md` při tom přesuň `git mv` do `data/pribehy/` (adresy osob zůstanou, `npm run data` ohlásí
+nefunkční odkazy).
 
 Na webu: při jediném příběhu je na `/pribehy/` (jako dřív). Při víc příbězích je v menu „Příběhy“ s rozcestníkem
 (název a `lead` každého příběhu), každý příběh má `/pribehy/<název>/` a na úvodní stránce je tlačítko ke každému.
