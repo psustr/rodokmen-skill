@@ -11,7 +11,7 @@ Vznikl při skutečném hledání předků jedné rodiny.
 
 **Autor a správce:** Jindřich Šaršon ([sarsonj@gmail.com](mailto:sarsonj@gmail.com), [GitHub](https://github.com/sarsonj))
 
-**Aktuální verze: 0.5.6 (listopad 2026)** – skripty pro MZA Brno a ZA Opava umí kromě Safari i Google Chrome (každý projekt může mít svůj prohlížeč). Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
+**Aktuální verze: 0.5.7 (listopad 2026)** – skripty pro MZA Brno a ZA Opava umí kromě Safari i Google Chrome (každý projekt může mít svůj prohlížeč). Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
 podle toho, na co narazíte vy. Jak aktualizovat, najdete v části [Instalace](#instalace), seznam změn
 v [historii repozitáře](https://github.com/sarsonj/rodokmen-skill/commits/main).
 

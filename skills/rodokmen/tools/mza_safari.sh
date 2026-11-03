@@ -19,6 +19,7 @@ for id in "$@"; do
     [[ $n != 0 && $n != 0.0 && $n != NO-TAB && $n == $prev ]] && break
     prev=$n
   done
-  js 'Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.txt
-  echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
+  js 'Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.tmp
+  if [[ -s pracovni/mza_paths/$id.tmp ]]; then mv pracovni/mza_paths/$id.tmp pracovni/mza_paths/$id.txt; echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
+  else rm -f pracovni/mza_paths/$id.tmp; echo "$id: v prohlížeči se nepodařilo načíst seznam snímků (ověření? JavaScript z událostí Apple?) – původní mezipaměť ponechána" >&2; fi
 done
