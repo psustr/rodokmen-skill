@@ -1,25 +1,15 @@
 #!/bin/zsh
 # mza_safari.sh <id knihy> [<id> …] – MZA (od 11/2026) chrání matriky ověřením „nejste robot“ a podepsanými adresami
-# obrázků. Otevře knihu v Safari (ověření projde samo), uloží podepsané adresy všech snímků do
-# pracovni/mza_paths/<id>.txt; pak `tools/mza.py snimek <id> <n> out.jpg` stahuje normálně přes curl (podpis platí pár hodin).
-# Jednou předem: Safari → Nastavení → Pokročilé „Zobrazovat funkce pro vývojáře“, Vývojář → „Povolit JavaScript z událostí Apple“.
+# obrázků. Otevře knihu v prohlížeči (Safari nebo Google Chrome, viz tools/prohlizec.sh; ověření projde samo), uloží
+# podepsané adresy všech snímků do pracovni/mza_paths/<id>.txt; pak `tools/mza.py snimek <id> <n> out.jpg` stahuje normálně přes curl (podpis platí pár hodin).
+# Jednou předem: Safari → Nastavení → Pokročilé „Zobrazovat funkce pro vývojáře“, Vývojář → „Povolit JavaScript z událostí Apple“;
+# Chrome → Zobrazit → Pro vývojáře → „Povolit JavaScript z událostí Apple“. Jeden prohlížeč na projekt: pracovni/prohlizec.txt.
 cd "$(dirname "$0")/.."; mkdir -p pracovni/mza_paths
-js() { osascript - "$1" <<'AS'
-on run argv
-tell application "Safari"
-  repeat with w in windows
-    repeat with t in tabs of w
-      if URL of t contains "mza.cz/actapublica" then return (do JavaScript (item 1 of argv) in t)
-    end repeat
-  end repeat
-  return "NO-TAB"
-end tell
-end run
-AS
-}
+source tools/prohlizec.sh   # Safari nebo Google Chrome: RODOKMEN_PROHLIZEC / pracovni/prohlizec.txt
+js() { prohlizec_js "mza.cz/actapublica" "$1"; }
 for id in "$@"; do
   if [[ $(js '1') == NO-TAB ]]; then
-    osascript -e "tell application \"Safari\" to tell front window to set current tab to (make new tab with properties {URL:\"https://www.mza.cz/actapublica/matrika/detail/$id\"})" >/dev/null
+    prohlizec_otevri "https://www.mza.cz/actapublica/matrika/detail/$id"
   else
     js "location.href='https://www.mza.cz/actapublica/matrika/detail/$id';'ok'" >/dev/null
   fi

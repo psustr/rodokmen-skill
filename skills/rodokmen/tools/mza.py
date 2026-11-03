@@ -74,8 +74,8 @@ def page(url):
             if exp and int(exp.group(1)) < time.time():
                 sys.exit(f"Podepsané adresy snímků knihy {m.group(1)} vypršely – obnov je: tools/mza_safari.sh {m.group(1)}")
         else:
-            sys.exit("MZA vrátila ověření „nejste robot“ místo knihy. Otevři Safari (JavaScript z událostí Apple povolen) "
-                     f"a spusť: tools/mza_safari.sh {m.group(1) if m else '<id>'}")
+            sys.exit("MZA vrátila ověření „nejste robot“ místo knihy. Ověření projde v prohlížeči projektu (pracovni/prohlizec.txt: "
+                     f"Safari / Google Chrome, JavaScript z událostí Apple povolen) – spusť: tools/mza_safari.sh {m.group(1) if m else '<id>'}")
     return t, paths
 
 

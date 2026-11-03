@@ -10,7 +10,7 @@ Matriky jsou online u osmi státních archivů – podle toho, **kde předci ži
 | SOA Třeboň | jižní Čechy | digi.ceskearchivy.cz | **ano – nástroj `trebon.py`** |
 | SOA Litoměřice | severní Čechy | Digitální badatelna – digi.soalitomerice.cz | **částečně – `soal_zoomify.py`** (knihu najdi v prohlížeči) |
 | AHMP | hl. m. Praha | katalog.ahmp.cz (Pragapublica) | **ano – `ahmp_search.sh`, `ahmp_scan.py`** |
-| MZA Brno | jižní Morava, Vysočina z části | Acta Publica – www.mza.cz/actapublica | **ano – `mza.py`** (od 11/2026 s ověřením přes Safari: `mza_safari.sh`) |
+| MZA Brno | jižní Morava, Vysočina z části | Acta Publica – www.mza.cz/actapublica | **ano – `mza.py`** (od 11/2026 s ověřením přes Safari/Chrome: `mza_safari.sh`) |
 | ZA Opava | severní Morava a Slezsko, Olomoucko a Litovelsko | Digitální badatelna – digi.archives.cz/da/ | **ano na macOS – `opava_safari.sh` + `soal_zoomify.py`**; jinak s prohlížečem (CAPTCHU řeší uživatel) |
 | Národní archiv | židovské matriky (HBMa), soupisy; pražské policejní přihlášky 1850–1914 | badatelna.eu; digi.nacr.cz/prihlasky2 | přihlášky **ano – `policie_prihlasky.py`** |
 
@@ -102,12 +102,30 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
 
 ## ZA Opava (severní Morava, Slezsko, Olomoucko, Litovelsko) – `tools/soal_zoomify.py`
 - Pozor na hranici: obce na Litovelsku a Olomoucku patří pod **ZA Opava**, ne pod MZA Brno.
-- **Na macOS přes Safari (vyzkoušeno, bez CAPTCHy):** uživatel jednou zapne Safari → Nastavení → Pokročilé „Zobrazovat
-  funkce pro webové vývojáře“ a Vývojář → „Povolit JavaScript z událostí Apple“ (dej mu přesný postup). Pak
-  `tools/opava_safari.sh hledat "Obec"` (seznam matrik), `otevri "Obec" "Př VIII 45"` (otevře knihu a uloží ID snímků),
+- **Na macOS přes Safari nebo Google Chrome (vyzkoušeno, bez CAPTCHy)** – nastavení prohlížeče viz „Prohlížeč pro
+  skripty“ níže. Pak `tools/opava_safari.sh hledat "Obec"` (seznam matrik), `otevri "Obec" "Př VIII 45"` (otevře knihu a uloží ID snímků),
   `adresa PrVIII45 125` (adresa obrázku pro `soal_zoomify.py`), `adresy PrVIII45 100 230` (pomalu celý rozsah – pak pomocník
   stahuje jen z images.archives.cz, bez prohlížeče a souběžně s jinou prací). Skript pracuje jen v kartě s digi.archives.cz,
-  uživatel může Safari dál používat; ať tu kartu nezavírá. Relace vyprší asi po hodině → znovu `otevri`.
+  uživatel může prohlížeč dál používat; ať tu kartu nezavírá. Relace vyprší asi po hodině → znovu `otevri`.
+
+### Prohlížeč pro skripty `opava_safari.sh` a `mza_safari.sh` (macOS)
+- Skripty ovládají uživatelův prohlížeč AppleScriptem: **Safari** (výchozí) nebo **Google Chrome**. Firefox neumí
+  spouštět JavaScript z AppleScriptu – nepodporuje se. Volba: první řádek souboru `pracovni/prohlizec.txt`
+  (`Safari` nebo `Google Chrome`), nebo proměnná prostředí `RODOKMEN_PROHLIZEC` (má přednost).
+- **Jednorázové nastavení (dej uživateli přesný postup):**
+  - Safari: Nastavení → Pokročilé → „Zobrazovat funkce pro webové vývojáře“, pak nabídka Vývojář → „Povolit JavaScript
+    z událostí Apple“.
+  - Google Chrome: nabídka Zobrazit → Pro vývojáře → „Povolit JavaScript z událostí Apple“
+    (anglicky View → Developer → Allow JavaScript from Apple Events).
+  - Při prvním spuštění se macOS zeptá, zda smí Terminál (Claude Code) ovládat prohlížeč – povolit (jinak Nastavení
+    systému → Soukromí a zabezpečení → Automatizace).
+- **Jeden prohlížeč na projekt.** Má-li uživatel víc projektů rodokmenu (víc sezení Claude Code najednou), ať má každý
+  v `pracovni/prohlizec.txt` jiný prohlížeč. Skript si sice označí vlastní kartu (`window.name = "rodokmen-<složka
+  projektu>"`), hledá přednostně ji a karty jiných projektů nebere, takže si v jednom prohlížeči nepřepisují knihy –
+  ale relace a cookies jsou v prohlížeči společné: nové hledání v badatelně nebo nové ověření na MZA jednoho projektu
+  může druhému zneplatnit relaci či výsledky hledání.
+- Pomocníci téhož projektu sdílejí stejnou kartu – prohlížeč smí mít najednou jen jeden. Potřebuje-li pomocník vlastní
+  kartu, ať skript spouští s `RODOKMEN_KARTA=<jméno>` (karta „rodokmen-<složka>-<jméno>“); relace je ale i tak společná.
 - **Jinak bez prohlížeče to nejde.** Badatelna `https://digi.archives.cz/da/` (stará adresa matriky.archives.cz jen přesměruje)
   má ochranu proti robotům – curl ani WebFetch se nedostanou ani na hledání. Potřebuješ připojený prohlížeč (Claude in
   Chrome – uživatel ho připojí příkazem `/chrome` – nebo Playwright); jinak ať knihu najde a snímky uloží uživatel.
@@ -139,7 +157,8 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   `snimek <id> <pořadí> out.jpg [-1]` (-1 = poloviční rozlišení); starý odkaz actapublica.eu převede `prevod`.
 - **Od 11/2026 ověření „nejste robot“ (altcha) a podepsané adresy obrázků** (`/iip-srv/iipsrv.fcgi/<platnost>/<podpis>?Deepzoom=…`,
   každý snímek zvlášť, platí ~30 minut). curl dostane jen bránu. Ověření neřeš ani neobcházej – otevři knihu v uživatelově
-  prohlížeči, kde projde samo: na macOS `tools/mza_safari.sh <id> [<id>…]` (Safari, JavaScript z událostí Apple – viz ZA Opava)
+  prohlížeči, kde projde samo: na macOS `tools/mza_safari.sh <id> [<id>…]` (Safari nebo Google Chrome, JavaScript
+  z událostí Apple – viz „Prohlížeč pro skripty“ u ZA Opava)
   uloží podepsané adresy všech snímků do `pracovni/mza_paths/<id>.txt` a `mza.py snimek` je pak použije. Když vypršely,
   `mza.py` to řekne – spusť `mza_safari.sh` znovu. Pomocníkům to napiš do zadání (smí ho spouštět sami, jen jeden najednou).
   Bez macOS: totéž v Claude in Chrome / Playwrightu (adresy jsou v HTML stránky knihy, `iip-srv…\.jp2\.dzi`).

@@ -173,7 +173,8 @@ Ať zmíní i zjevně související výskyty (viz krok 6 výše). Výstupy pomoc
 **Jejich čtení vždy ověř sám na snímku** (`python3 -I tools/overit.py <snímek> x0,y0,x1,y1 pracovni/over`, souřadnice jako zlomky 0–1 šířky a výšky, ne pixely, rozdělí zápis
 na dvě čitelné poloviny), než ho zapíšeš jako `doc`. Uživateli to vysvětli správně: pomocníci nečtou hůř, je to stejný
 model. Jde o princip čtyř očí a pomocník nemá kontext (dvě rodiny stejného jména ve vsi, dva Janové na statku).
-Prohlížeč může mít najednou jen jeden pomocník, proto dávej přednost nástrojům bez prohlížeče.
+Prohlížeč může mít najednou jen jeden pomocník, proto dávej přednost nástrojům bez prohlížeče. Běží-li u uživatele
+víc projektů rodokmenu najednou, má mít každý jiný prohlížeč (`pracovni/prohlizec.txt`, viz `reference/portaly.md`).
 **Pomocníky spouštěj na levnějším modelu** (Agent s `model: "sonnet"`): hledání a první čtení zvládnou a stojí zlomek
 kreditů. Ověření na snímku a zápis do dat dělá hlavní model (ty). Uživateli to řekni, ať ví, proč kredity tolik neubývají.
 Osvědčilo se 3–4 pomocníci na různé větve a archivy současně, jedno kolo ≈ 15–25 nových předků.
@@ -281,8 +282,8 @@ Nedělej to pořád. Postup:
 | `ahmp_search.sh "dotaz"`, `ahmp_scan.py XID snímek out.jpg` | matriky Prahy (AHMP) |
 | `policie_prihlasky.py Příjmení [Jméno] [od] [do]`, `karta <pořadí> out.jpg …` | pražské policejní přihlášky 1850–1914 (rodiny s dětmi a adresami), stažení karty |
 | `soal_zoomify.py <cesta nebo adresa> 0 out.jpg` | snímek SOA Litoměřice nebo ZA Opava (knihu najdi v prohlížeči; pozor na blokování) |
-| `opava_safari.sh hledat / otevri / adresa / adresy` | ZA Opava na macOS přes uživatelovo Safari (bez CAPTCHy) – knihy a adresy snímků pro `soal_zoomify.py` |
-| `mza.py hledat / info / snimek`, `mza_safari.sh <id>` | matriky MZA Brno (Acta Publica); ověření „nejste robot“ projde v Safari, podepsané adresy snímků do `pracovni/mza_paths/` |
+| `opava_safari.sh hledat / otevri / adresa / adresy` | ZA Opava na macOS přes uživatelovo Safari nebo Chrome (`pracovni/prohlizec.txt`, viz `reference/portaly.md`; bez CAPTCHy) – knihy a adresy snímků pro `soal_zoomify.py` |
+| `mza.py hledat / info / snimek`, `mza_safari.sh <id>` | matriky MZA Brno (Acta Publica); ověření „nejste robot“ projde v Safari/Chrome, podepsané adresy snímků do `pracovni/mza_paths/` |
 | `matricula_dl.sh`, `matricula_batch.sh` | snímky z Matriculy (Rakousko…), URL se bere z prohlížeče |
 | `anno.py`, `anno_snap.py`, `kramerius.py` | noviny: ANNO (rakouské), Kramerius (české) |
 | `ged_import.py strom.ged "Jméno"` | předci z rodinného stromu (GEDCOM) + fronta zápisů |
