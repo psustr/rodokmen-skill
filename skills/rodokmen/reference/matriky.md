@@ -109,6 +109,11 @@ Mladší knihy jsou na matričním úřadě obce s rozšířenou působností / 
 - Nemanželské dítě nese příjmení matky; otec chybí nebo je dopsán později (legitimace na okraji).
 - Stejný předek dvakrát v rodokmenu (vzdálení příbuzní se vzali) – v datech `SAME`.
 - Index nenašel ≠ zápis neexistuje. Zapiš, co přesně jsi prošel.
+- **Sňatek se nenašel tam, kde rodina žila?** Projdi křty a úmrtí jejích nejstarších dětí: v křtu jsou rodiče matky
+  i s bydlištěm a **kmotr nebo porodní bába z jiné obce prozradí předchozí bydliště** rodiny (projekt Šustrových: kmotr
+  ze Žešova u křtu 1832 v Určicích → rodina žila 1820–1830 v Žešově, kde jsou další děti). Sňatek bývá ve **farnosti
+  nevěsty**, ne ženicha. Nejstarší dítě může zemřít jinde, než se narodilo – věk v úmrtí ukáže, kde hledat dál.
+- Údaje v úmrtním zápise („manželství trvalo 41 let“) bývají chybné, i když jsou čitelné – proti datům dětí je ověř.
 - Pomocníci (subagenti) a OCR/AI čtou historické písmo chybně – vždy ověř sám (viz `playbook.md` §1 bod 10).
 
 ## Technické pasti (macOS, zsh) – napiš je i pomocníkům do zadání

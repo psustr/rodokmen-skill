@@ -163,6 +163,9 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   `mza.py` to řekne – spusť `mza_safari.sh` znovu. Pomocníkům to napiš do zadání (smí ho spouštět sami, jen jeden najednou).
   Bez macOS: totéž v Claude in Chrome / Playwrightu (adresy jsou v HTML stránky knihy, `iip-srv…\.jp2\.dzi`).
 - Knihy farností bývají po obcích, každý oddíl má vlastní foliaci a často **vlastní rejstřík za oddílem**.
+- **Rejstřík bývá samostatná kniha** s jiným id (Prostějov: oddaní 1808–1829 = kn. 5947, rejstřík ženichů = kn. 5997) –
+  než prohlásíš knihu za „bez rejstříku“, projdi `mza.py hledat` celé fary (roky se překrývají, typ „I“/rejstřík).
+  Rejstříky oddaných bývají jen podle ženicha – nevěstu jimi nenajdeš.
 
 ## Pražské policejní přihlášky 1850–1914 (Národní archiv) – `tools/policie_prihlasky.py`
 - Karty pražských rodin: hlava rodiny, manželka s rokem a místem narození, děti s roky, adresy, někdy místo sňatku.
@@ -254,6 +257,17 @@ Matriky do 1918 (a farář z jiného kraje i dřív) píší obce německy, lati
 - Historický místopis Moravy a Slezska (Hosák), Wikipedie (sekce „Název“ s historickými tvary, např. Lidgeřovice).
 - Vždy ověř **souvislost**: patřila obec do kraje/panství, odkud rodina mohla přijít (sousední fary, panství, cesty)?
   Nejisté ztotožnění dej do `ISSUES` jako „Hypotéza:“, ne jako doložené místo.
+- **Přípony:** německé „-au“ bývá české „-ov“ (Kozlov → Koslau, Křenov → Krönau, Kučerov → Kutscherau), „-itz“ = „-ice“,
+  „-dorf“ = „-ov/-ice“ podle místa. Neznámé „K…au“ tedy hledej i jako českou obec „K…ov“. Malé české vsi na Hané
+  a Drahanské vrchovině ve slovníku NKA často **nejsou** (nemají ustálený německý název) – úředník si tvar vymyslel
+  foneticky. Pak pomůže místopis (Wolný, Markrabství moravské; Hosák) nebo dotaz na fóru.
+- **Kandidáta od uživatele nebo z AI vyhledávače** (Google, chatbot) nejdřív porovnej se slovem na snímku: počet písmen,
+  první písmeno stejné ruky (stejné jako v jiném slově na téže stránce?), oblouček nad „u“, koncovka. AI čtení kurentu
+  bývá úplně mimo (projekt Šustrových, 11/2026: „Czerny … Určic … Kalabis … Kinau“ přečteno jako „Lorenz … Unčic …
+  Krabatis … Říman“). Kandidát, který tvarem nesedí, vyřaď hned – ušetříš celé kolo hledání.
+- **Když se tvar opakuje v několika zápisech různých farářů** (5× „Kinau“ v letech 1822–1861), není to přepis jednoho
+  písaře, ale ustálené jméno; po 2–3 negativních kolech v matrikách to zapiš do `archivni_dotazy.md` (seznam vyloučených
+  obcí + hotový text dotazu pro fórum/archiv) a dál nelosuj.
 
 ## Starší prameny (17.–18. století)
 - **Soupis poddaných podle víry 1651** – celé rodiny s věkem, po krajích; edice Národního archivu jako PDF
