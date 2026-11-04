@@ -38,7 +38,7 @@ def get(url):
     err = None
     for _ in range(3):
         try:
-            return urllib.request.urlopen(url, timeout=30).read()
+            return urllib.request.urlopen(urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0", "Referer": "https://digi.archives.cz/"}), timeout=30).read()
         except Exception as e:
             time.sleep(1)
             err = e
