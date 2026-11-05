@@ -7,6 +7,17 @@
 cd "$(dirname "$0")/.."; mkdir -p pracovni/mza_paths
 source tools/prohlizec.sh   # Safari nebo Google Chrome: RODOKMEN_PROHLIZEC / pracovni/prohlizec.txt
 js() { prohlizec_js "mza.cz/actapublica" "$1"; }
+# Zámek: souběžní pomocníci sdílejí jeden prohlížeč – bez zámku si přepínají stránku a do mezipaměti se zapíší
+# adresy cizí knihy. Čekej max. 5 min; zámek starší než 5 min je pozůstatek spadlého běhu.
+LOCK=pracovni/mza_paths/.zamek
+for i in {1..150}; do
+  mkdir "$LOCK" 2>/dev/null && break
+  [[ -n $(find "$LOCK" -maxdepth 0 -mmin +5 2>/dev/null) ]] && rmdir "$LOCK" 2>/dev/null && continue
+  (( i == 1 )) && echo "čekám na prohlížeč (používá ho jiný pomocník)…" >&2
+  sleep 2
+done
+[[ -d $LOCK ]] || { echo "prohlížeč je obsazený – zkus to za chvíli" >&2; exit 1; }
+trap 'rmdir "$LOCK" 2>/dev/null' EXIT INT TERM
 for id in "$@"; do
   if [[ $(js '1') == NO-TAB ]]; then
     prohlizec_otevri "https://www.mza.cz/actapublica/matrika/detail/$id"
@@ -19,7 +30,8 @@ for id in "$@"; do
     [[ $n != 0 && $n != 0.0 && $n != NO-TAB && $n == $prev ]] && break
     prev=$n
   done
-  js 'Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.tmp
+  touch "$LOCK"   # obnov zámek, ať ho jiný běh nepovažuje za starý
+  js 'location.href.indexOf("detail/'$id'")<0 ? "" : Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.tmp
   if [[ -s pracovni/mza_paths/$id.tmp ]]; then mv pracovni/mza_paths/$id.tmp pracovni/mza_paths/$id.txt; echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
   else rm -f pracovni/mza_paths/$id.tmp; echo "$id: v prohlížeči se nepodařilo načíst seznam snímků (ověření? JavaScript z událostí Apple?) – původní mezipaměť ponechána" >&2; fi
 done
