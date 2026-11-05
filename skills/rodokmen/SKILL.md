@@ -219,7 +219,8 @@ Podrobně `reference/web.md`. Ve zkratce:
    (claude.ai) localhost neuvidí – pošli mu snímky stránek (headless prohlížeč) nebo nasaď náhled.
 2. Nastav `data/web.json`: název, úvod, kontakt a **přihlašovací otázku a odpověď** (web je jen pro rodinu).
 3. Po každé změně dat: `npm run data && npm run build` (nebo znovu `npm run nahled`). Hlášky `POZOR: nefunkční odkaz`
-   oprav hned (adresa osoby se mění, když se jí doplní rok narození).
+   oprav hned. Odkazy na osoby, jejichž adresa se změnila doplněním nebo zpřesněním roku narození, přepíše `npm run data`
+   v příbězích a zajímavostech samo (pamatuje si minulé adresy v `data/.adresy_osob.json`; hlásí „odkazy opraveny v …“).
    Po každém větším kole hledání zkontroluj i texty úvodu ve `web.json` (`uvod`, `zajimavosti_na_uvodu`) –
    zastarávají („nejstarší předek je…“, počty generací).
 4. Před zveřejněním si vezmi `reference/soukromi.md` a projdi s uživatelem, co na webu bude (žijící lidé!).

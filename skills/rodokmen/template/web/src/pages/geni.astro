@@ -1,0 +1,18 @@
+---
+// /geni/ – co je potřeba opravit nebo doplnit v rodokmenu na Geni (data/chyby_geni.md, převádí `npm run data`).
+import Base from '../layouts/Base.astro';
+import { config } from '../lib/data.js';
+import { Content } from '../generated/geni.md';
+import raw from '../generated/geni.md?raw';
+const geni = config.geni ?? {};
+const email = config.kontakt?.email;
+---
+<Base title="Co opravit na Geni" wide>
+  <h1>Co opravit na Geni</h1>
+  <p class="lead">
+    Rodokmen jsme porovnali s originály matrik. Tady je, co na {geni.odkaz ? <a href={geni.odkaz}>Geni</a> : 'Geni'} nesouhlasí
+    nebo chybí – každá položka má odkaz na zápis z matriky, podle kterého ji lze opravit.
+    {email && <> Připomínky a opravy posílejte na <a href={`mailto:${email}`}>{email}</a>.</>}
+  </p>
+  {raw.trim() ? <div class="prose table-box"><Content /></div> : <p class="muted">Zatím tu nic není.</p>}
+</Base>

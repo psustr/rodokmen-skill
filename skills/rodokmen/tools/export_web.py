@@ -283,6 +283,7 @@ def main():
         slugs[k] = s
     for a, c in SAME.items():
         slugs[a] = slugs[c]
+    fix_renamed_links(slugs)
     aliases_of = {}
     for a, c in SAME.items():
         aliases_of.setdefault(c, []).append(a)
@@ -415,6 +416,11 @@ def main():
         path = os.path.join(DATA, src)
         text = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
         write(os.path.join(gen_dir, dst), strip_comments(re.sub(r"^# .*\n", "", text, count=1)))
+    # Co opravit na Geni (data/chyby_geni.md) → /geni/; klíč zápisu v `obrácených apostrofech` = odkaz na stránku zápisu
+    path = os.path.join(DATA, "chyby_geni.md")
+    geni = strip_comments(re.sub(r"^# .*\n", "", open(path, encoding="utf-8").read(), count=1)) if os.path.exists(path) else ""
+    geni = re.sub(r"`([a-z0-9_]+)`", lambda m: f"[{recs[m.group(1)]['title']}](/zdroj/{m.group(1)}/)" if m.group(1) in recs else m.group(0), geni)
+    write(os.path.join(gen_dir, "geni.md"), geni)
     story_dir = os.path.join(gen_dir, "pribehy")   # web/src/pages/pribehy/ je čte všechny (import.meta.glob)
     shutil.rmtree(story_dir, ignore_errors=True)
     for slug, path, _ in story_list:
@@ -458,12 +464,42 @@ def main():
     texts = {os.path.relpath(path, DATA).replace(os.sep, "/"): open(os.path.join(story_dir, slug + ".md"), encoding="utf-8").read()
              for slug, path, _ in story_list}
     texts["zajimavosti.md"] = open(os.path.join(gen_dir, "zajimavosti.md"), encoding="utf-8").read()
+    texts["chyby_geni.md"] = geni
     texts["web.json"] = json.dumps(cfg, ensure_ascii=False)
     texts["osoby.py (hypotézy)"] = json.dumps(hypotheses, ensure_ascii=False)
     broken = [(f, m.group(0)) for f, t in texts.items()
               for m in re.finditer(r"(?<![\w/-])/(osoba|zdroj|rod|rodina|pribehy)/([^/\s)\"'#?<>\]]+)", t) if m.group(2) not in targets[m.group(1)]]
     for f, link in dict.fromkeys(broken):
         print(f"POZOR: nefunkční odkaz {link}/ v {f} – oprav ho (adresy stránek jsou ve web/src/data/site.json)")
+
+
+def fix_renamed_links(slugs):
+    """Adresa osoby obsahuje rok narození, takže se změní, když se rok doplní nebo zpřesní (jan-novak-1792 → jan-novak-1791).
+    Pamatuje si adresy z minulého exportu (data/.adresy_osob.json) a v příbězích a zajímavostech přepíše staré odkazy na nové."""
+    memo = os.path.join(DATA, ".adresy_osob.json")
+    try:
+        prev = {int(k): v for k, v in json.load(open(memo, encoding="utf-8")).items()}
+    except (OSError, ValueError):
+        prev = {}
+    current = set(slugs.values())
+    renamed = {old: slugs[k] for k, old in prev.items() if k in slugs and old != slugs[k] and old not in current}
+    if renamed:
+        files = [os.path.join(DATA, "zajimavosti.md"), os.path.join(DATA, "pribeh.md")]
+        folder = os.path.join(DATA, "pribehy")
+        if os.path.isdir(folder):
+            files += [os.path.join(folder, f) for f in sorted(os.listdir(folder)) if f.endswith(".md")]
+        pat = re.compile(r"/osoba/(" + "|".join(re.escape(o) for o in sorted(renamed, key=len, reverse=True)) + r")(?=[/\s)\"'#?<>\]]|$)")
+        for path in files:
+            if not os.path.exists(path):
+                continue
+            text = open(path, encoding="utf-8").read()
+            new = pat.sub(lambda m: "/osoba/" + renamed[m.group(1)], text)
+            if new != text:
+                open(path, "w", encoding="utf-8").write(new)
+                print(f"odkazy opraveny v {os.path.relpath(path, DATA)}: " +
+                      ", ".join(f"{o} → {n}" for o, n in renamed.items() if "/osoba/" + o in text))
+    with open(memo, "w", encoding="utf-8") as f:
+        json.dump({str(k): v for k, v in sorted(slugs.items())}, f, ensure_ascii=False, indent=0)
 
 
 if __name__ == "__main__":

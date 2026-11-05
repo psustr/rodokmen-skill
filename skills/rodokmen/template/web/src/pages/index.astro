@@ -6,9 +6,13 @@ import MobileTree from '../components/MobileTree.astro';
 import FamilyMap from '../components/FamilyMap.astro';
 import site from '../data/site.json';
 import { stories, storyHref } from '../lib/pribehy.js';
+import geniRaw from '../generated/geni.md?raw';
 const lineList = Object.values(lines).sort((a, b) => a.k - b.k);
 const uvod = config.uvod ?? {};
 const cards = config.zajimavosti_na_uvodu ?? [];
+const geni = config.geni ?? {};
+const geniOpravy = geniRaw.trim().length > 0;
+const email = config.kontakt?.email;
 ---
 <Base title="" wide>
   <h1>{config.nazev || 'Rodokmen'}</h1>
@@ -83,4 +87,18 @@ const cards = config.zajimavosti_na_uvodu ?? [];
   </div>
   <div class="fan-preview only-desktop"><a class="cover" href="/vejir/" aria-label="Otevřít vějíř předků přes celou obrazovku"></a><Fragment set:html={fan} /></div>
   <p><a class="btn" href="/vejir/">Otevřít vějíř předků přes celou obrazovku →</a> <a href="/predci/" style="margin-left:1rem">nebo seznam všech předků</a></p>
+
+  {(geni.odkaz || geniOpravy) && (
+    <section class="geni">
+      <h2>{geni.nadpis || 'Rodokmen na Geni'}</h2>
+      {(geni.odstavce ?? []).map((t) => <p>{t}</p>)}
+      {geni.odkaz && (
+        <p>
+          <a class="btn" href={geni.odkaz}>{geni.tlacitko || 'Otevřít rodokmen na Geni'} →</a>
+        </p>
+      )}
+      {geni.pozvanka && <p>{geni.pozvanka}{email && <> <a href={`mailto:${email}`}>{email}</a></>}</p>}
+      {geniOpravy && <p><a href="/geni/">Co je potřeba na Geni opravit nebo doplnit →</a></p>}
+    </section>
+  )}
 </Base>

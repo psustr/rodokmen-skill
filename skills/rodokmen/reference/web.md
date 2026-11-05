@@ -28,7 +28,8 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
  "prihlaseni": {"uvod": "Tenhle web je jen pro rodinu.", "otazka": "Jak se jmenoval pes u babičky v Holicích?", "odpoved": "Alík"},
  "uvod": {"nadpis": "Lákavý nadpis", "odstavce": ["2–3 věty, které chytí"], "foto": "klic_obrazku_ve_vyrezech", "foto_popis": "…"},
  "pribehy": [{"soubor": "novakovi", "menu": "Příběh Nováků", "tlacitko": "Přečíst příběh Nováků"}, {"soubor": "dvorakovi"}],
- "zajimavosti_na_uvodu": [{"nadpis": "Nejstarší předek", "text": "Kovář Jan, asi 1825."}]
+ "zajimavosti_na_uvodu": [{"nadpis": "Nejstarší předek", "text": "Kovář Jan, asi 1825."}],
+ "geni": {"odkaz": "https://www.geni.com/people/…", "odstavce": ["Na Geni máme společný rodokmen…"], "tlacitko": "Otevřít rodokmen na Geni", "pozvanka": "Ještě tam nejste? Napište Petrovi a pošle vám pozvánku."}
 }
 ```
 - `kontakt.jmeno` je ve 3. pádě („Napište Petrovi na …“).
@@ -50,6 +51,13 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   Bez vyplněného `uvod` ukáže úvodní stránka aspoň název a `lead` každého příběhu.
 - `npm run data` hlásí `POZOR: nefunkční odkaz …` i v příbězích (osoby, `/zdroj/<klíč>/`, rody, rodiny, `/pribehy/<soubor>/`).
 - Šablona `web.json` je prázdná – název nastav hned, jak znáš příjmení výchozí osoby (`kontrola.py` hlásí zbytky ukázky).
+- **Rodokmen na Geni / MyHeritage** (`geni`, nepovinné): sekce na konci úvodní stránky – `odkaz` na strom (profil zemřelého
+  předka, živí bývají skrytí), `odstavce` (poděkování těm, kdo strom vedou – **jména jen se souhlasem**, raději obecně „naši
+  příbuzní“), `tlacitko`, `pozvanka` (výzva pro příbuzné, kteří o stromu nevědí; za ni se doplní `kontakt.email`). Když
+  existuje `data/chyby_geni.md`, je na `/geni/` stránka „Co opravit na Geni“ a z úvodu na ni vede odkaz. Klíče zápisů
+  v `obrácených apostrofech` se tam převedou na odkazy na stránky zápisů; první řádek `# …` a komentáře se vynechají.
+  Piš ji jako veřejný seznam (bez oslovení a jmen správců), žijící jen jménem a rokem narození. Dopis správci stromu
+  (`pracovni/…`) z ní pak jen vychází.
 - `citlive_schvaleno`: seznam úryvků textu, které uživatel na webu schválil (např. `["oběsil se ve stodole"]`) –
   `kontrola.py` je pak nehlásí jako `CITLIVÉ`. Úryvek musí obsahovat hlášené slovo; když se text změní, hlásí se znovu.
 
