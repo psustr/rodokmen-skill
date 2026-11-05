@@ -97,6 +97,42 @@ Na webu: při jediném příběhu je na `/pribehy/` (jako dřív). Při víc př
 (název a `lead` každého příběhu), každý příběh má `/pribehy/<název>/` a na úvodní stránce je tlačítko ke každému.
 Pořadí: `poradi` ve frontmatter (nebo seznam `pribehy` ve `web.json`, viz `web.md`).
 
+## Dobové souvislosti (velké dějiny v příběhu)
+Příběh ožije, když čtenář ví, co se kolem předků dělo. Do kapitoly dej **nejvýš jednu dvě věty** o události, která se
+dotkla jejich země nebo kraje, a spoj ji s konkrétním člověkem („Bylo mu patnáct, když Josef II. zrušil nevolnictví“,
+„Rok po jeho svatbě táhla Moravou pruská vojska“). Vztah, který nedokládá zápis, piš jako možnost („zda zažil válku
+1866, nevíme“) – nikdy netvrď, že předek bojoval, utekl nebo zemřel kvůli události, pokud to neříká pramen.
+Lokální události (epidemie, hladomor, požár obce, bitva v okolí) mají přednost před korunovacemi.
+
+Zdroje: **časová osa NKA** (Rukověť genealoga: https://genealogie.nka.cz/?page_id=971 – panovníci, války a bitvy
+v Čechách a na Moravě, matriční předpisy, katastry, mapování 1549–1952), Wikipedie (dějiny obce a kraje, sekce
+„Historie“), obecní kroniky a weby obcí. Vybrané události, které se v příbězích osvědčily (ověř si datum pro kraj):
+
+| Rok | Událost | Proč je to pro rodokmen zajímavé |
+|---|---|---|
+| 1618–1648 | třicetiletá válka (Morava bojištěm ještě 1643–1645, obléhání Brna) | pusté grunty, přistěhovalci, matriky jen výjimečně |
+| 1651–1658 | soupis poddaných podle víry (Čechy 1651), berní rula (Čechy 1654), přiznávací listy a lánové vizitace (Morava 1656–1658) | první jmenné soupisy hospodářů před matrikami |
+| 1669–1679 | lánový rejstřík (Morava) | hospodáři po válce |
+| 1680, 1713–1715 | morové epidemie | výkyv úmrtí v matrice |
+| 1683 | obléhání Vídně Turky | |
+| 1740–1763 | války Marie Terezie (ztráta Slezska 1742, Kladska; sedmiletá válka, obléhání Olomouce 1758, bitvy u Kolína a Prahy 1757) | vojáci, nová hranice se Slezskem |
+| 1770–1772 | hladomor; číslování domů (1770–1771) | od té doby čp. v matrikách |
+| 1780–1781 | povinná dědičná příjmení (1780), zrušení nevolnictví a toleranční patent (1781) | stěhování za prací, evangelíci |
+| 1784 | jednotný tištěný formulář matrik (do 1949), oddíly po obcích | snazší čtení |
+| 1805 | bitva u Slavkova | Jižní Morava |
+| 1831–1832, 1836, 1849–1850, 1855, 1866 | cholera | „cholera“ v příčině úmrtí |
+| 1848 | revoluce, zrušení roboty (září 1848) | sedlák hospodaří bez poddanských povinností |
+| 1866 | prusko-rakouská válka (Hradec Králové 3. 7., Tovačov 15. 7.), po ní cholera | |
+| 1868–1870 | občanské sňatky a civilní matriky | |
+| 1869 | osmiletá povinná školní docházka (říšský školský zákon) | |
+| 1914–1918 | první světová válka | padlí, legie, dítě narozené „v době války“ |
+| 1918 | vznik Československa (28. 10.); španělská chřipka 1918–1920 | |
+| 1919–1921 | pozemková reforma | |
+| 1929–1934 | hospodářská krize, nezaměstnanost | |
+| 1938–1945 | Mnichov a zábor pohraničí, protektorát, druhá světová válka | |
+| 1945–1946 | odsun Němců, dosídlení pohraničí | stěhování rodin |
+| 1949–1950 | zestátnění matrik (od 1950 národní výbory), kolektivizace (JZD) | konec farních matrik |
+
 **Jak má vypadat** (osvědčený tvar, asi 800–1500 slov):
 - Kapitoly po generacích, od nejstaršího předka k dnešku. Nadpis = člověk nebo jeho role + roky
   („Krejčí z Holic (asi 1756–1812)“, „Služka, která zachránila jméno“).

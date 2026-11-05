@@ -203,6 +203,8 @@ v 17. století. Zapiš to do `ISSUES`/`archivni_dotazy.md` a jdi na jinou větev
 
 ## Fáze 3 – Zajímavosti a Příběh hlavního rodu
 Podrobně `reference/pribehy.md`. Tohle je to, co rodina na webu čte nejradši, takže na to nezapomínej a nenechávej to na konec.
+Do kapitol příběhu přidávej i **dobové souvislosti** – jednu větu o události, která se dotkla země či kraje (války, epidemie,
+zrušení roboty, vznik ČSR); tabulka a zdroje (časová osa NKA) jsou tamtéž.
 - **Zajímavosti** („fun facts“) sbírej **průběžně**: co najdeš při čtení, hned zapiš do `data/zajimavosti.md`
   a řekni uživateli. Po každém kole spusť `python3 -I tools/napady.py`. Najde v datech svatby krátce před porodem,
   rod v jednom domě, sňatky příbuzných, dlouhověkost, epidemie… Ověř a napiš jako krátké příběhy.
