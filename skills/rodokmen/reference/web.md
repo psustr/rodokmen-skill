@@ -53,7 +53,9 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
 - Šablona `web.json` je prázdná – název nastav hned, jak znáš příjmení výchozí osoby (`kontrola.py` hlásí zbytky ukázky).
 - **Rodokmen na Geni / MyHeritage** (`geni`, nepovinné): sekce na konci úvodní stránky – `odkaz` na strom (profil zemřelého
   předka, živí bývají skrytí), `odstavce` (poděkování těm, kdo strom vedou – **jména jen se souhlasem**, raději obecně „naši
-  příbuzní“), `tlacitko`, `pozvanka` (výzva pro příbuzné, kteří o stromu nevědí; za ni se doplní `kontakt.email`). Když
+  příbuzní“), `tlacitko`, `pozvanka` (výzva pro příbuzné, kteří o stromu nevědí; za ni se doplní `kontakt.email`), `postup`
+  (seznam kroků „jak pozvat další příbuzné“, rozbalovací; `postup_nadpis`, `postup_odkaz` na návod služby –
+  Geni: https://www.geni.com/blog/how-to-invite-someone-to-your-tree-30171.html). Když
   existuje `data/chyby_geni.md`, je na `/geni/` stránka „Co opravit na Geni“ a z úvodu na ni vede odkaz. Klíče zápisů
   v `obrácených apostrofech` se tam převedou na odkazy na stránky zápisů; první řádek `# …` a komentáře se vynechají.
   Piš ji jako veřejný seznam (bez oslovení a jmen správců), žijící jen jménem a rokem narození. Dopis správci stromu

@@ -98,6 +98,13 @@ const email = config.kontakt?.email;
         </p>
       )}
       {geni.pozvanka && <p>{geni.pozvanka}{email && <> <a href={`mailto:${email}`}>{email}</a></>}</p>}
+      {(geni.postup ?? []).length > 0 && (
+        <details>
+          <summary>{geni.postup_nadpis || 'Jak pozvat další příbuzné'}</summary>
+          <ol>{geni.postup.map((t) => <li>{t}</li>)}</ol>
+          {geni.postup_odkaz && <p class="small"><a href={geni.postup_odkaz}>Návod na Geni (anglicky) →</a></p>}
+        </details>
+      )}
       {geniOpravy && <p><a href="/geni/">Co je potřeba na Geni opravit nebo doplnit →</a></p>}
     </section>
   )}
