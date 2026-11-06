@@ -14,7 +14,7 @@ Vychází z původního skillu, který napsal **Jindřich Šaršon** ([GitHub](h
 Pavla Šustra: sourozenci předků, MZA Brno a ZA Opava přes prohlížeč (Safari i Chrome), víc příběhů na webu, dobové
 souvislosti, sekce „Rodokmen na Geni“ a stránka s opravami pro Geni, německé a zkomolené názvy obcí a další.
 
-**Aktuální verze: 0.5.12 (listopad 2026)** – dobové souvislosti v příbězích (časová osa NKA a tabulka událostí); dřív: sekce „Rodokmen na Geni“ na úvodu webu (poděkování, pozvánka a postup pozvání příbuzných) a stránka /geni/ „Co opravit na Geni“ z data/chyby_geni.md; dřív: návod na neznámé a zkomolené názvy obcí (přípony -au = -ov, ověření kandidátů z AI proti snímku), hledání původu rodiny přes kmotry a křty dětí; dřív: skripty pro MZA a ZA Opava v Safari i Google Chrome. Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
+**Aktuální verze: 0.5.13 (listopad 2026)** – šetrné stahování z MZA (jeden snímek najednou ze všech projektů, pauzy); dřív: dobové souvislosti v příbězích (časová osa NKA a tabulka událostí); dřív: sekce „Rodokmen na Geni“ na úvodu webu (poděkování, pozvánka a postup pozvání příbuzných) a stránka /geni/ „Co opravit na Geni“ z data/chyby_geni.md; dřív: návod na neznámé a zkomolené názvy obcí (přípony -au = -ov, ověření kandidátů z AI proti snímku), hledání původu rodiny přes kmotry a křty dětí; dřív: skripty pro MZA a ZA Opava v Safari i Google Chrome. Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
 podle toho, na co narazíte vy. Jak aktualizovat, najdete v části [Instalace](#instalace), seznam změn
 v [historii repozitáře](https://github.com/psustr/rodokmen-skill/commits/main).
 

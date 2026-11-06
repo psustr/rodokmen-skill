@@ -11,6 +11,8 @@ Použití:
 Starý odkaz lze rovnou dát i do `info` a `snimek` (převede se sám).
 Pozor: id v starých odkazech actapublica.eu NENÍ id v nových odkazech – vždy převádět.
 Stahuje přes curl (Python urllib server odmítá). Snímky šetrně – jeden po druhém, už stažené nestahuj znovu.
+Šetrnost: snímky se stahují po jednom ze všech projektů naráz (zámek ~/.cache/rodokmen-mza) s pauzou
+RODOKMEN_MZA_PAUZA sekund (výchozí 8). Při výpadku (403, spojení zavřeno) nezkoušej znovu hned – počkej hodiny.
 """
 import time, html, os, re, subprocess, sys, tempfile
 for _s in (sys.stdout, sys.stderr):
@@ -118,7 +120,46 @@ def hledat(obec):
         pg += 1
 
 
+# Šetrnost k serveru: jeden snímek najednou ze VŠECH projektů a sezení na počítači (společný zámek v domovské složce)
+# a pauza mezi snímky. MZA při velkém náporu dočasně zablokuje IP adresu (11/2026: po dnech práce dvou sezení naráz).
+LOCK_DIR = os.path.join(os.path.expanduser("~"), ".cache", "rodokmen-mza")
+PAUZA = float(os.environ.get("RODOKMEN_MZA_PAUZA", "8"))   # sekund mezi snímky (minimum 3)
+
+
+def setrne():
+    """Počká na společný zámek a na pauzu od posledního snímku; vrátí funkci, která zámek uvolní."""
+    os.makedirs(LOCK_DIR, exist_ok=True)
+    lock, last = os.path.join(LOCK_DIR, "zamek"), os.path.join(LOCK_DIR, "posledni")
+    for _ in range(600):                      # max. 10 minut čekání
+        try:
+            os.mkdir(lock)
+            break
+        except FileExistsError:
+            if time.time() - os.path.getmtime(lock) > 300:   # pozůstatek spadlého běhu
+                os.rmdir(lock)
+                continue
+            time.sleep(1)
+    else:
+        sys.exit("MZA: jiný běh stahuje přes 10 minut – zkus to později")
+    wait = max(PAUZA, 3) - (time.time() - (os.path.getmtime(last) if os.path.exists(last) else 0))
+    if wait > 0:
+        time.sleep(wait)
+
+    def uvolni():
+        open(last, "w").close()
+        os.rmdir(lock)
+    return uvolni
+
+
 def snimek(path, out, half=False):
+    uvolni = setrne()
+    try:
+        _snimek(path, out, half)
+    finally:
+        uvolni()
+
+
+def _snimek(path, out, half=False):
     base = path if path.startswith("http") else IIP + path
     dzi = curl(base + ".dzi")
     w, h = map(int, re.search(r'Width="(\d+)" Height="(\d+)"', dzi).groups())
@@ -134,7 +175,7 @@ def snimek(path, out, half=False):
             for y in range(rows):
                 for x in range(cols):
                     f.write(f'url = "{base}_files/{level}/{x}_{y}.jpg"\noutput = "{d}/{y:03d}_{x:03d}.jpg"\n')
-        subprocess.run(["curl", "-sS", "--fail", "-Z", "--parallel-max", "4", "--max-time", "60", "--retry", "3", *UA, "-K", cfg], check=True)
+        subprocess.run(["curl", "-sS", "--fail", "-Z", "--parallel-max", "2", "--max-time", "60", "--retry", "3", *UA, "-K", cfg], check=True)
         rowimgs = []
         for y in range(rows):
             r = f"{d}/row{y:03d}.png"
