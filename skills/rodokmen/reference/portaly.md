@@ -165,7 +165,7 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
 - Knihy farností bývají po obcích, každý oddíl má vlastní foliaci a často **vlastní rejstřík za oddílem**.
 - **Šetrnost (11/2026):** po několika dnech stahování ze dvou sezení najednou MZA dočasně zablokovalo domácí IP adresu
   (Safari ověřením prošlo, snímky ale 403 / spojení zavřeno; z telefonu web šel). `mza.py snimek` proto stahuje po jednom
-  snímku ze všech projektů na počítači (společný zámek `~/.cache/rodokmen-mza`) s pauzou `RODOKMEN_MZA_PAUZA` (výchozí 8 s).
+  snímku ze všech projektů na počítači (společný zámek `~/.cache/rodokmen-mza`) s pauzou `RODOKMEN_MZA_PAUZA` (výchozí 20 s).
   Při výpadku nezkoušej znovu hned – počkej hodiny až den a pak zkus jeden snímek. Nepřepínej na firemní VPN ani jinou
   síť, abys blokaci obešel. Do zadání pomocníků: jen jeden pomocník s MZA na celý počítač, nestahuj snímky „pro jistotu“.
 - **Rejstřík bývá samostatná kniha** s jiným id (Prostějov: oddaní 1808–1829 = kn. 5947, rejstřík ženichů = kn. 5997) –

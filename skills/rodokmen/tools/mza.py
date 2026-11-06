@@ -12,7 +12,7 @@ Starý odkaz lze rovnou dát i do `info` a `snimek` (převede se sám).
 Pozor: id v starých odkazech actapublica.eu NENÍ id v nových odkazech – vždy převádět.
 Stahuje přes curl (Python urllib server odmítá). Snímky šetrně – jeden po druhém, už stažené nestahuj znovu.
 Šetrnost: snímky se stahují po jednom ze všech projektů naráz (zámek ~/.cache/rodokmen-mza) s pauzou
-RODOKMEN_MZA_PAUZA sekund (výchozí 8). Při výpadku (403, spojení zavřeno) nezkoušej znovu hned – počkej hodiny.
+RODOKMEN_MZA_PAUZA sekund (výchozí 20). Při výpadku (403, spojení zavřeno) nezkoušej znovu hned – počkej hodiny.
 """
 import time, html, os, re, subprocess, sys, tempfile
 for _s in (sys.stdout, sys.stderr):
@@ -123,7 +123,7 @@ def hledat(obec):
 # Šetrnost k serveru: jeden snímek najednou ze VŠECH projektů a sezení na počítači (společný zámek v domovské složce)
 # a pauza mezi snímky. MZA při velkém náporu dočasně zablokuje IP adresu (11/2026: po dnech práce dvou sezení naráz).
 LOCK_DIR = os.path.join(os.path.expanduser("~"), ".cache", "rodokmen-mza")
-PAUZA = float(os.environ.get("RODOKMEN_MZA_PAUZA", "8"))   # sekund mezi snímky (minimum 3)
+PAUZA = float(os.environ.get("RODOKMEN_MZA_PAUZA", "20"))   # sekund mezi snímky (minimum 3)
 
 
 def setrne():
