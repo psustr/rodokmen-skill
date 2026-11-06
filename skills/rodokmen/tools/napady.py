@@ -18,7 +18,7 @@ for _s in (sys.stdout, sys.stderr):   # UTF-8 výstup i na Windows bez -X utf8 (
         _s.reconfigure(encoding="utf-8", errors="replace")
 
 ROOT = sys.argv[1] if len(sys.argv) > 1 else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATE = r"(\d{1,2})\.\s*(\d{1,2})\.\s*(\d{4})"
+DATE = r"(\d{1,2})\.\s*(?:\(\?\)\s*)?(\d{1,2})\.\s*(?:\(\?\)\s*)?(\d{4})"   # i „18. (?) 1. 1820“
 EPIDEMIE = {1771: "hladomor", 1772: "hladomor a tyfus", 1805: "tyfus", 1831: "cholera", 1832: "cholera", 1836: "cholera",
             1849: "cholera", 1850: "cholera", 1855: "cholera", 1866: "cholera a prusko-rakouská válka",
             1873: "cholera", 1918: "španělská chřipka", 1919: "španělská chřipka"}
@@ -71,8 +71,10 @@ def main():
         # svatba × narození dítěte v přímé linii (dítě předka k je k // 2)
         if k >= 2 and k % 2 == 0 and marr and (k // 2) in P:
             cb = event(P[k // 2], "*")
-            wife = P.get(k + 1, {}).get("n", "").split()
-            mine = [m for m in marr if wife and wife[-1][:5] in m[1]] or (marr if len(marr) == 1 else [])
+            wife = [w for w in re.split(r"[\s/]+", P.get(k + 1, {}).get("n", "")) if w and not w.startswith("(")]
+            # sňatek s matkou dítěte: podle příjmení manželky; bez shody jen tehdy, když má předek jediný zapsaný sňatek
+            n_marr = sum(1 for f in p.get("f", []) if f.strip().startswith("×"))
+            mine = [m for m in marr if wife and wife[-1][:5] in m[1]] or (marr if n_marr == 1 else [])
             if cb:
                 for md, _ in mine:
                     days = (cb[0][0] - md).days
