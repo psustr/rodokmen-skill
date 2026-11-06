@@ -19,11 +19,13 @@ for _s in (sys.stdout, sys.stderr):
 
 BASE = "https://www.mza.cz/actapublica/matrika/detail/"
 IIP = "https://www.mza.cz/iipsrv/iipsrv.fcgi?Deepzoom="
-UA = ["-A", "Mozilla/5.0", "-e", "https://www.mza.cz/actapublica/"]
+# Od 6. 11. 2026 MZA odmítá (403) zkrácený User-Agent „Mozilla/5.0“ – posílej úplný řetězec běžného prohlížeče.
+UA = ["-A", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
+      "-e", "https://www.mza.cz/actapublica/"]
 
 
 def curl(url, out=None, params=None):
-    cmd = ["curl", "-sSL", "--fail", *UA]
+    cmd = ["curl", "-sSL", "--fail", "--max-time", "60", "--retry", "2", *UA]   # server občas spojení „zasekne“
     if params:
         cmd += ["-G", url] + sum([["--data-urlencode", f"{k}={v}"] for k, v in params.items()], [])
     else:
@@ -132,7 +134,7 @@ def snimek(path, out, half=False):
             for y in range(rows):
                 for x in range(cols):
                     f.write(f'url = "{base}_files/{level}/{x}_{y}.jpg"\noutput = "{d}/{y:03d}_{x:03d}.jpg"\n')
-        subprocess.run(["curl", "-sS", "--fail", "-Z", "--parallel-max", "4", *UA, "-K", cfg], check=True)
+        subprocess.run(["curl", "-sS", "--fail", "-Z", "--parallel-max", "4", "--max-time", "60", "--retry", "3", *UA, "-K", cfg], check=True)
         rowimgs = []
         for y in range(rows):
             r = f"{d}/row{y:03d}.png"
