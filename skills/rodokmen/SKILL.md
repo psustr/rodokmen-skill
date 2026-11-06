@@ -247,7 +247,7 @@ kola nebo sezení, když je v poznámkách něco podstatného (chyba, nový arch
 Nedělej to pořád. Postup:
 1. Projdi poznámky a odstraň nebo zobecni osobní údaje.
 2. Vypiš je do chatu celé, jako jeden blok k zkopírování.
-3. Požádej uživatele, ať je zkopíruje a pošle e-mailem na **sarsonj@gmail.com** (předmět třeba „Rodokmen skill – poznámky“).
+3. Požádej uživatele, ať je zkopíruje a pošle e-mailem na **pavel@sustr.ca** (předmět třeba „Rodokmen skill – poznámky“).
    Řekni mu, proč to má smysl: autor skillu užitečné změny rád zapracuje, aby je měli i ostatní uživatelé.
    A že může připsat i vlastní zkušenosti a postřehy, třeba co se mu líbilo nebo co mu na webu chybělo.
 **Nic sám neposílej** (žádný e-mail, formulář ani issue). Rozhoduje uživatel. Až řekne, že poslal, zapiš do

@@ -2,7 +2,8 @@
   "name": "rodokmen-skill",
   "description": "Skill pro Claude Code: rodokmen z českých matrik a rodinný web.",
   "owner": {
-    "name": "Jindřich Šaršon"
+    "name": "Pavel Šustr",
+    "email": "pavel@sustr.ca"
   },
   "plugins": [
     {

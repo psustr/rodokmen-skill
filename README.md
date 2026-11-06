@@ -9,11 +9,14 @@ znalost rodiny a rozhodujete.
 
 Vznikl při skutečném hledání předků jedné rodiny.
 
-**Autor a správce:** Jindřich Šaršon ([sarsonj@gmail.com](mailto:sarsonj@gmail.com), [GitHub](https://github.com/sarsonj))
+**Tato verze (fork) – autor a správce:** Pavel Šustr ([pavel@sustr.ca](mailto:pavel@sustr.ca), [GitHub](https://github.com/psustr)).
+Vychází z původního skillu, který napsal **Jindřich Šaršon** ([GitHub](https://github.com/sarsonj), [původní repozitář](https://github.com/sarsonj/rodokmen-skill)). Změny oproti originálu (verze 0.5.1 a dál) jsou dílem
+Pavla Šustra: sourozenci předků, MZA Brno a ZA Opava přes prohlížeč (Safari i Chrome), víc příběhů na webu, dobové
+souvislosti, sekce „Rodokmen na Geni“ a stránka s opravami pro Geni, německé a zkomolené názvy obcí a další.
 
 **Aktuální verze: 0.5.12 (listopad 2026)** – dobové souvislosti v příbězích (časová osa NKA a tabulka událostí); dřív: sekce „Rodokmen na Geni“ na úvodu webu (poděkování, pozvánka a postup pozvání příbuzných) a stránka /geni/ „Co opravit na Geni“ z data/chyby_geni.md; dřív: návod na neznámé a zkomolené názvy obcí (přípony -au = -ov, ověření kandidátů z AI proti snímku), hledání původu rodiny přes kmotry a křty dětí; dřív: skripty pro MZA a ZA Opava v Safari i Google Chrome. Skill se průběžně vyvíjí – opravuji chyby a doplňuji postupy pro další archivy
 podle toho, na co narazíte vy. Jak aktualizovat, najdete v části [Instalace](#instalace), seznam změn
-v [historii repozitáře](https://github.com/sarsonj/rodokmen-skill/commits/main).
+v [historii repozitáře](https://github.com/psustr/rodokmen-skill/commits/main).
 
 > **Než začnete**
 >
@@ -24,7 +27,7 @@ v [historii repozitáře](https://github.com/sarsonj/rodokmen-skill/commits/main
 >
 > Projekt vznikl i jako **test toho, kam současná AI dosáhne**. Chtěl jsem zkusit úkol, který je opravdu těžký:
 > kurrent, latina, zkratky farářů, stejná jména a dlouhé řetězce závěrů. Výsledky mě překvapily, ale nejsou to
-> výsledky profesionála.
+> výsledky profesionála. *(Jindřich Šaršon, autor původního skillu)*
 >
 > Kdo potřebuje rodokmen, na který se dá spolehnout (dědictví, publikace, sporné případy), nebo se zasekne na místě,
 > kam matriky nestačí, ať se obrátí na genealoga. Začít můžete u
@@ -34,11 +37,11 @@ v [historii repozitáře](https://github.com/sarsonj/rodokmen-skill/commits/main
 > podklad.
 >
 > **Jste genealog nebo zkušený badatel?** Budu rád za kritiku. Když uvidíte chybu v postupu, ve čtení nebo v tom,
-> co skill radí, [založte issue](https://github.com/sarsonj/rodokmen-skill/issues) nebo mi napište. Vaše zkušenost
+> co skill radí, [založte issue](https://github.com/psustr/rodokmen-skill/issues) nebo mi napište. Vaše zkušenost
 > je přesně to, co AI chybí.
 
 **Přečetla AI něco špatně, něco nefunguje nebo jste narazili na jiný problém?**
-[Založte prosím issue na GitHubu →](https://github.com/sarsonj/rodokmen-skill/issues/new)
+[Založte prosím issue na GitHubu →](https://github.com/psustr/rodokmen-skill/issues/new)
 (víc v části [Zpětná vazba](#zpětná-vazba-a-vaše-zkušenosti)).
 
 ## Jak vypadá web
@@ -73,7 +76,7 @@ S jiným nebo slabším modelem počítejte s víc chybami ve čtení starého p
 ### Varianta A – jako plugin (doporučeno)
 V Claude Code napište:
 ```
-/plugin marketplace add sarsonj/rodokmen-skill
+/plugin marketplace add psustr/rodokmen-skill
 /plugin install rodokmen@rodokmen-skill
 ```
 Pak Claude Code restartujte (do běžící relace se nový plugin nenačte).
@@ -156,11 +159,11 @@ Windows a staršího ImageMagicku, postupy pro MZA Brno a ZA Opava, bezpečná �
 a průběžně zapracovávám – ne každou hned a ne každou doslova, aby skill zůstal jednoduchý pro všechny.
 
 **Chyby a problémy** – AI špatně přečetla zápis, spojila nesprávné lidi, nějaký krok nefunguje nebo spadl nástroj –
-prosím [založte jako issue na GitHubu](https://github.com/sarsonj/rodokmen-skill/issues/new) (stačí bezplatný účet).
+prosím [založte jako issue na GitHubu](https://github.com/psustr/rodokmen-skill/issues/new) (stačí bezplatný účet).
 Popište, co se stalo, a pokud jde o čtení zápisu, přidejte odkaz na snímek v archivu. Issues jsou veřejné, proto
 do nich nepište údaje o žijících lidech.
 
-Budu rád i za další zkušenosti. Napište mi na **sarsonj@gmail.com**, co fungovalo, co ne, jaký archiv jste použili, co vám na webu chybělo.
+Budu rád i za další zkušenosti. Napište mi na **pavel@sustr.ca**, co fungovalo, co ne, jaký archiv jste použili, co vám na webu chybělo.
 Užitečné změny rád zapracuji do skillu, aby je měli k dispozici i ostatní. Další verze tak bude lepší pro každého,
 kdo hledá své předky.
 
@@ -185,6 +188,6 @@ tady v repozitáři.
   jeho návodem řídí.
 
 ## Licence
-Skill je pod licencí [MIT](LICENSE): smíte ho volně používat, upravovat a šířit dál, jen zachovejte uvedení autora (Jindřich Šaršon).
+Skill je pod licencí [MIT](LICENSE): smíte ho volně používat, upravovat a šířit dál, jen zachovejte uvedení autorů (původní autor Jindřich Šaršon, úpravy této verze Pavel Šustr).
 Výjimkou je metodická příručka `skills/rodokmen/reference/playbook.md`. Je to převzatá rešeršní zpráva bez uvedeného
 autora, licence MIT se na ni nevztahuje (podrobnosti na začátku souboru).
