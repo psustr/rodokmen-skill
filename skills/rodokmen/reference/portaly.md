@@ -163,6 +163,14 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   `mza.py` to řekne – spusť `mza_safari.sh` znovu. Pomocníkům to napiš do zadání (smí ho spouštět sami, jen jeden najednou).
   Bez macOS: totéž v Claude in Chrome / Playwrightu (adresy jsou v HTML stránky knihy, `iip-srv…\.jp2\.dzi`).
 - Knihy farností bývají po obcích, každý oddíl má vlastní foliaci a často **vlastní rejstřík za oddílem**.
+- **Snímky jen přes prohlížeč (od 9. 11. 2026):** MZA obrázky mimo prohlížeč odmítá (403 / zavřené spojení). Skript se
+  za prohlížeč **nevydává** (žádný cizí User-Agent). `tools/mza_snimek.sh <id> <n> out.jpg [-1]` (volá ho i
+  `mza.py snimek <id> <n> …`) nechá stránku knihy otevřenou v uživatelově prohlížeči načíst dlaždice snímku, složit je
+  na plátně a předat obrázek – stejně, jako by si ho uživatel prohlédl a uložil. Hledání a info (`mza.py hledat/info`)
+  dál přes curl s poctivou identifikací `rodokmen-skill (+github…)`.
+- **ZA Opava (od 9. 11. 2026):** obrázkový server images.archives.cz vrací 404 na požadavky, které nejsou z prohlížeče
+  v badatelně, a prohlížeč je skriptu nedovolí přečíst (chybí CORS) – `soal_zoomify.py` pro Opavu nefunguje a za prohlížeč
+  se nevydávej. Snímky z Opavy ať si uživatel uloží ručně (v prohlížeči) do `pracovni/`, ty pak čti a vyřezávej.
 - **Šetrnost (11/2026):** po několika dnech stahování ze dvou sezení najednou MZA dočasně zablokovalo domácí IP adresu
   (Safari ověřením prošlo, snímky ale 403 / spojení zavřeno; z telefonu web šel). `mza.py snimek` proto stahuje po jednom
   snímku ze všech projektů na počítači (společný zámek `~/.cache/rodokmen-mza`) s pauzou `RODOKMEN_MZA_PAUZA` (výchozí 20 s).

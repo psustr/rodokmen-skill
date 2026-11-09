@@ -7,7 +7,7 @@ Použití:
   mza.py info <odkaz nebo id knihy>              → číslo knihy, původce, roky, části a počet snímků
   mza.py snimek <odkaz s ?image=…> <out.jpg> [-1]
   mza.py snimek <id knihy> <pořadí snímku> <out.jpg> [-1]
-                                                 → složí snímek z dlaždic (Deep Zoom); -1 = poloviční rozlišení
+                                                 → snímek uloží prohlížeč (tools/mza_snimek.sh); -1 = poloviční rozlišení
 Starý odkaz lze rovnou dát i do `info` a `snimek` (převede se sám).
 Pozor: id v starých odkazech actapublica.eu NENÍ id v nových odkazech – vždy převádět.
 Stahuje přes curl (Python urllib server odmítá). Snímky šetrně – jeden po druhém, už stažené nestahuj znovu.
@@ -21,9 +21,9 @@ for _s in (sys.stdout, sys.stderr):
 
 BASE = "https://www.mza.cz/actapublica/matrika/detail/"
 IIP = "https://www.mza.cz/iipsrv/iipsrv.fcgi?Deepzoom="
-# Od 6. 11. 2026 MZA odmítá (403) zkrácený User-Agent „Mozilla/5.0“ – posílej úplný řetězec běžného prohlížeče.
-UA = ["-A", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-      "-e", "https://www.mza.cz/actapublica/"]
+# Stránky (hledání, info) stahuje curl s poctivou identifikací. Snímky jen přes prohlížeč (tools/mza_snimek.sh) –
+# MZA od 11/2026 obrázky mimo prohlížeč odmítá a skript se za prohlížeč nevydává.
+UA = ["-A", "rodokmen-skill (+https://github.com/psustr/rodokmen-skill)", "-e", "https://www.mza.cz/actapublica/"]
 
 
 def curl(url, out=None, params=None):
@@ -196,6 +196,10 @@ def main():
         hledat(a[1])
     elif cmd == "info":
         info(a[1])
+    elif cmd == "snimek" and len([x for x in a if x != "-1"]) == 4:   # <id> <n> <out>: přes prohlížeč
+        root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        args = [x for x in a[1:] if x != "-1"]
+        sys.exit(subprocess.run(["zsh", os.path.join(root, "tools", "mza_snimek.sh"), *args] + (["-1"] if "-1" in a else [])).returncode)
     elif cmd == "snimek":
         half = "-1" in a
         a = [x for x in a if x != "-1"]
