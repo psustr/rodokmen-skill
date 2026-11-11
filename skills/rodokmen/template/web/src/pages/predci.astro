@@ -17,7 +17,7 @@ const gens = [...new Set(list.map((p) => p.gen))];
           {list.filter((p) => p.gen === g).map((p) => (
             <tr>
               <td class="small muted">{p.k}</td>
-              <td><PersonLink slug={p.slug} /></td>
+              <td><PersonLink slug={p.slug} avatar /></td>
               <td class="small">{p.rel}</td>
               <td class="small">{p.line && lineByK[p.line] && <><span class="dot" style={`display:inline-block;width:.6rem;height:.6rem;border-radius:50%;background:${lineByK[p.line].color};margin-right:.3rem`}></span>{lineByK[p.line].name}</>}</td>
               <td><span class={`chip ${statusClass(p.st)}`}>{p.status}</span></td>

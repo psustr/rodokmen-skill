@@ -18,7 +18,7 @@ const path = [...p.path].reverse().filter(Boolean);
   <div class="crumbs">
     {path.map((s, i) => <>{i > 0 && <span>→</span>}{s === p.slug ? <span>{people[s].name}</span> : <a href={href.person(s)}>{people[s].name.split(' ')[0]} {people[s].years}</a>}</>)}
   </div>
-  <h1>{p.name}</h1>
+  {p.photo ? <div class="person-head"><a href={p.photo} target="_blank" rel="noopener"><img class="portrait" src={p.photo} alt={p.name} /></a><h1>{p.name}</h1></div> : <h1>{p.name}</h1>}
   <div class="chips">
     {p.years && <span class="chip">{p.years}</span>}
     <span class="chip">{p.rel}</span>

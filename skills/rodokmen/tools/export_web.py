@@ -309,7 +309,9 @@ def main():
             child=slugs.get(k // 2) if k > 1 else None, spouse=slugs.get(k ^ 1) if k > 1 else None,
             family=None, ownFamily=None, path=path,
             side=[side_row(s, recs) for s in SIDE if s["k"] == k], birth=birth_key(p.get("y"), p.get("f", [])),
-            docs=[dict(img=d["img"], caption=d["popis"]) for d in docs_cfg if k in d.get("osoby", [])],
+            docs=[dict(img=d["img"], caption=d["popis"]) for d in docs_cfg if k in d.get("osoby", []) and not d.get("portret")],
+            photo=next((f"/img/{d['img']}.jpg" for d in docs_cfg if d.get("portret") and k in d.get("osoby", [])
+                        and os.path.exists(os.path.join(VYREZY, d["img"] + ".jpg"))), None),
             children=[slugs[c] for c in [k // 2] + [a // 2 for a in aliases_of.get(k, [])] if k > 1 and c in slugs],
             also=[dict(k=a, rel=relation(a), line=line_of(a), child=slugs.get(a // 2)) for a in aliases_of.get(k, [])],
         )

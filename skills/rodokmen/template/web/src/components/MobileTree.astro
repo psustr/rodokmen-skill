@@ -22,7 +22,7 @@ const genWord = (n) => (n < 5 ? 'generace' : 'generací');
           const more = li === levels.length - 1 && p ? depth(kk) : 0;
           return p ? (
             <a class="mbox" href={href.person(p.slug)} style={line ? `border-left-color:${line.color}` : undefined}>
-              <strong>{p.name}</strong><span>{p.years}</span>
+              {p.photo && <img class="avatar" src={p.photo} alt="" loading="lazy" />}<strong>{p.name}</strong><span>{p.years}</span>
               {more > 0 && <span class="more">a dál {more} {genWord(more)} →</span>}
             </a>
           ) : (

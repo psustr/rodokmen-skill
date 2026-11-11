@@ -42,6 +42,9 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   skončí chybou; otevřený web jen výslovně přes `"otevreny": true` v `prihlaseni`.
   Je to lehká ochrana proti náhodným návštěvníkům, ne bankovní zabezpečení – citlivé věci na web nepatří.
 - `uvod.foto` = klíč obrázku ve `vyrezy/` (ulož přes `vyrez.py`).
+- **Portréty:** v `data/dokumenty.json` položka s `"portret": true` (obrázek obličeje, čtvercový výřez ve `vyrezy/`) se ukáže
+  jako kulatý avatar u osoby v seznamu předků, ve stromu a u jména na stránce osoby (mezi dokumenty se pak neopakuje).
+  Fotky žijících jen se souhlasem (u výchozí osoby stačí její).
 - **Příběhy** (`data/pribehy/*.md`, viz `pribehy.md`) se nastavují hlavně ve frontmatter (`title`, `lead`, `rod`, `poradi`,
   `menu`, `tlacitko`). `pribehy` ve `web.json` je nepovinné: pořadí příběhů (`soubor` = název souboru bez `.md`)
   a přepsání `menu`/`tlacitko`/`rod`. `pribehy_menu` = text položky menu při víc příbězích (výchozí „Příběhy“).

@@ -215,3 +215,11 @@ ol.kids > li.kid::before { counter-increment: kid; content: counter(kid) "."; po
 ol.kids > li.kid.direct { border-left-color: var(--accent); background: var(--accent-soft); }
 ol.kids > li.kid p { margin: .1rem 0; }
 ol.kids > li.kid ul.facts { margin: .15rem 0 .1rem; }
+
+/* Portréty (dokumenty.json → "portret": true): avatar v seznamu předků a ve stromu, větší fotka u jména osoby */
+.avatar { width: 1.9rem; height: 1.9rem; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 0.45rem; border: 1px solid var(--line); background: #f1ede6; display: inline-block; }
+.avatar.none { border-style: dashed; }
+.pedigree .box .avatar { float: left; width: 2.2rem; height: 2.2rem; margin: 0 0.45rem 0 0; }
+.mbox .avatar { float: left; width: 2.2rem; height: 2.2rem; margin: 0 0.45rem 0 0; }
+.person-head { display: flex; align-items: center; gap: 1rem; }
+.person-head .portrait { width: 6.5rem; height: 6.5rem; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }

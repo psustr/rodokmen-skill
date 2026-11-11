@@ -20,7 +20,7 @@ const genWord = (n) => (n === 1 ? 'generace' : n < 5 ? 'generace' : 'generací')
       return p ? (
         <a role="listitem" class={`box ${c === 0 ? 'self' : ''} ${more ? 'has-more' : ''}`} style={style} href={href.person(p.slug)}
           title={more ? `Rodokmen pokračuje: ${known(kk) - 1} dalších předků` : undefined}>
-          {p.name}<span class="y">{p.years || ' '}</span>
+          {p.photo && <img class="avatar" src={p.photo} alt="" loading="lazy" />}{p.name}<span class="y">{p.years || ' '}</span>
           {more > 0 && <span class="more">a dál {more} {genWord(more)} →</span>}
         </a>
       ) : (
