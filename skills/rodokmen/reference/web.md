@@ -45,6 +45,17 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
 - **Portréty:** v `data/dokumenty.json` položka s `"portret": true` (obrázek obličeje, čtvercový výřez ve `vyrezy/`) se ukáže
   jako kulatý avatar u osoby v seznamu předků, ve stromu a u jména na stránce osoby (mezi dokumenty se pak neopakuje).
   Fotky žijících jen se souhlasem (u výchozí osoby stačí její).
+- **Fotky z rodinného stromu (Geni, MyHeritage):** export GEDCOM obsahuje odkazy na fotky (`2 FILE https://…`).
+  `python3 -I tools/ged_fotky.py <export.ged> <ID výchozí osoby> seznam` ukáže, kdo fotky má, Kekulé předků a u ostatních
+  nejbližšího předka s cestou (cesta vede od osoby k předkovi: „otec → otec“ = vnuk). Snímky matrik (soubory pojmenované
+  číslem knihy) vynechá. `… stahni <ID> …` stáhne vybrané do `pracovni/ged_foto/` (po jedné, pauza). Pak:
+  - **předci:** čtvercový výřez obličeje do `vyrezy/portret_<slug>.jpg` → `dokumenty.json` s `"portret": true` (avatar
+    a fotka u jména); celou fotku (ne jen výřez) navíc jako běžný dokument;
+  - **ostatní příbuzní** (bez vlastní stránky): `vyrezy/foto_<jméno>.jpg` → dokument u nejbližšího předka, popisek se
+    vztahem („vnuk Oldřicha Šustra – syn Josefa Šustra (* 1948)“); všechno je i na stránce `/fotografie/`;
+  - **žijící** jen s výslovným souhlasem (děti se souhlasem rodičů) a v popisku jen jméno, rok narození a vztah;
+  - ikony a nečitelné náhledy (pod ~100 px, „doc.png“) nedávej; vždy si fotky prohlédni na náhledu (montáž).
+  Odkazy v exportu jsou podepsané a po čase vyprší – pak stačí nový export.
 - **Příběhy** (`data/pribehy/*.md`, viz `pribehy.md`) se nastavují hlavně ve frontmatter (`title`, `lead`, `rod`, `poradi`,
   `menu`, `tlacitko`). `pribehy` ve `web.json` je nepovinné: pořadí příběhů (`soubor` = název souboru bez `.md`)
   a přepsání `menu`/`tlacitko`/`rod`. `pribehy_menu` = text položky menu při víc příbězích (výchozí „Příběhy“).
