@@ -52,7 +52,8 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   - **předci:** čtvercový výřez obličeje do `vyrezy/portret_<slug>.jpg` → `dokumenty.json` s `"portret": true` (avatar
     a fotka u jména); celou fotku (ne jen výřez) navíc jako běžný dokument;
   - **ostatní příbuzní** (bez vlastní stránky): `vyrezy/foto_<jméno>.jpg` → dokument u nejbližšího předka, popisek se
-    vztahem („vnuk Oldřicha Šustra – syn Josefa Šustra (* 1948)“); všechno je i na stránce `/fotografie/`;
+    vztahem („vnuk Oldřicha Šustra – syn Josefa Šustra (* 1948)“) a `"kdo": "Petr Šustr"` (podle toho se fotky na
+    stránce `/fotografie/` seskupí; u předků „kdo“ nevyplňuj – seskupí se podle osoby);
   - **žijící** jen s výslovným souhlasem (děti se souhlasem rodičů) a v popisku jen jméno, rok narození a vztah;
   - ikony a nečitelné náhledy (pod ~100 px, „doc.png“) nedávej; vždy si fotky prohlédni na náhledu (montáž).
   Odkazy v exportu jsou podepsané a po čase vyprší – pak stačí nový export.
