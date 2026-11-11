@@ -33,6 +33,8 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
 }
 ```
 - `kontakt.jmeno` je ve 3. pádě („Napište Petrovi na …“).
+- **Přihlášení:** `"kontakt": false` v `prihlaseni` skryje e-mail na veřejné přihlašovací stránce (jinak tam je „Neznáte odpověď? Napište…“).
+  Místo otázky může být „Heslo“ a odpověď náhodné heslo (malá písmena a číslice, pomlčky se ignorují) – nejsilnější varianta.
 - **Přihlášení:** otázka, na kterou zná odpověď jen rodina (ne snadno dohledatelná na sociálních sítích).
   Odpověď se porovnává bez diakritiky a velkých písmen. Na serveru i v cookie prohlížeče je jen její otisk (SHA-256),
   samotná odpověď se nikam neukládá. Krátkou nebo běžnou odpověď (jméno, obec) ale jde z otisku uhádnout zkoušením,

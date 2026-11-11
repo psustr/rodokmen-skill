@@ -232,7 +232,7 @@ def login_files(cfg):
         sys.exit("CHYBA: web/ má starou šablonu přihlášení. Aktualizujte projekt: python3 -I <skill>/tools/novy_projekt.py <složka projektu>")
     contact = cfg.get("kontakt") or {}
     hint = ""
-    if contact.get("email"):
+    if contact.get("email") and login.get("kontakt", True):   # „kontakt“: false = na přihlašovací stránce bez e-mailu
         hint = (f'Neznáte odpověď? Napište {html.escape(contact.get("jmeno", ""))} na '
                 f'<a href="mailto:{html.escape(contact["email"])}">{html.escape(contact["email"])}</a>.')
     page = (tpl.replace("{{NAZEV}}", html.escape(cfg.get("nazev", "Rodokmen")))
