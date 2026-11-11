@@ -1,5 +1,5 @@
 ---
-// /fotografie/ – všechny rodinné fotografie a dokumenty (data/dokumenty.json), seskupené podle osoby.
+// /fotografie/ – všechny rodinné fotografie a dokumenty (data/dokumenty.json), seřazené podle osoby (fotky jedné osoby jsou vedle sebe).
 // Skupina = „kdo“ (příbuzný bez vlastní stránky), jinak předek z „osoby“; pořadí podle čísla předka (Kekulé), pak jména.
 import Base from '../layouts/Base.astro';
 import PersonLink from '../components/PersonLink.astro';
@@ -16,18 +16,15 @@ const list = [...groups.values()].sort((a, b) => (a.anc?.k ?? 1e9) - (b.anc?.k ?
 <Base title="Fotografie" wide>
   <h1>Rodinné fotografie a dokumenty</h1>
   <p class="lead">Fotografie předků a jejich příbuzných a rodinné dokumenty, seskupené podle osoby. Kliknutím obrázek zvětšíte. Snímky zápisů z matrik najdete na stránce <a href="/zapisy/">Zápisy</a>.</p>
-  {list.length ? list.map((g) => (
-    <section class="photo-group">
-      <h2>{g.who ? g.who : g.anc ? <PersonLink slug={g.anc.slug} /> : 'Ostatní'}</h2>
-      {g.who && g.anc && <p class="small muted">U předka: <PersonLink slug={g.anc.slug} /></p>}
-      <div class="docs">
-        {g.items.map((d) => (
-          <figure>
-            <a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a>
-            <figcaption>{d.caption}</figcaption>
-          </figure>
-        ))}
-      </div>
-    </section>
-  )) : <p class="muted">Zatím tu nic není.</p>}
+  {list.length ? (
+    <div class="docs">
+      {list.flatMap((g) => g.items.map((d, i) => (
+        <figure class={i === 0 ? 'group-start' : ''}>
+          <div class="who">{g.who ? g.who : g.anc ? <PersonLink slug={g.anc.slug} showYears={false} /> : ' '}{g.who && g.anc && <span class="small muted"> · u předka <PersonLink slug={g.anc.slug} showYears={false} /></span>}</div>
+          <a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a>
+          <figcaption>{d.caption}</figcaption>
+        </figure>
+      )))}
+    </div>
+  ) : <p class="muted">Zatím tu nic není.</p>}
 </Base>
