@@ -133,6 +133,8 @@ Základní smyčka pro každou osobu:
    2. zápis do `data/zaznamy.json` (klíč = popisný název, např. `holice_krest_jan_novak_1890`; odkaz na snímek) přes `tools/zapis.py`,
    3. výřez: `python3 -I tools/vyrez.py pracovni/<stránka>.jpg <klíč> x0,y0,x1,y1` (velkoryse – celý zápis s hlavičkou sloupců a okrajovými poznámkami),
    4. rámeček čteného místa: `python3 -I tools/ramecek.py <klíč> x0,y0,x1,y1` a **prohlédni si** `pracovni/ramecek_<klíč>.jpg`,
+      rámeček **jen kolem čteného zápisu** – výřez obvykle zabírá i sousední zápisy (čtenář pak čte jiného člověka:
+      „vidím tam Magdalenu Aberle“); rámeček přes celý výřez jen tehdy, když na něm opravdu nic jiného není,
    5. přepis originálu a český překlad do `data/prepisy.json` (nejistá místa „(?)“, nečitelná „[…]“),
    6. osobu/osoby do `data/osoby.py` (`f` fakta, `r` klíč zápisu, `st="doc"`), sourozence a kmotry-příbuzné do `SIDE`.
       **Sourozenci se zapisují vždy** (`vztah="sourozenec"`, `y`, `f`, viz `reference/data.md`): když u křtu předka
