@@ -40,6 +40,8 @@ P = {
     seřazení podle roku narození (`y`, jinak fakt začínající `*`), na stránce předka v oddílu „Sourozenci“.
     `f` jako u předků (narození, sňatek, úmrtí, povolání, přípisy na okraji křtu), `st` jako u předků (`doc` jen ze snímku).
   - Ostatní (manželka z 1. manželství, strýc, kmotr-příbuzný): bez `vztah` nebo s jiným `vztah` → karta „Další příbuzní“.
+    Volitelně `foto=["foto_<jméno>", …]` (obrázky ve `vyrezy/`) – první se ukáže v kartě jako portrét; karta má kotvu
+    `#<jméno-rok>`, na kterou odkazuje stránka Fotografie (dokument s `"kdo"` = jméno z `n`).
   - Starý formát `dict(k=…, n="Josef Novák (1865–1920)", t="…")` funguje dál (jako „Další příbuzní“).
 - `ISSUES` – dvojice `("Otázka", "Vyřešeno: … / Hypotéza: … / Otevřené: …")` → stránka „Co hledáme“ (vyřešené se skryjí).
   Jde na web – nepiš sem citlivé věci (příčiny úmrtí, rodinné spory) bez souhlasu.

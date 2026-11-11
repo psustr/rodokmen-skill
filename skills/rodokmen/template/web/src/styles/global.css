@@ -224,3 +224,4 @@ ol.kids > li.kid ul.facts { margin: .15rem 0 .1rem; }
 .person-head { display: flex; align-items: center; gap: 1rem; }
 .person-head .portrait { width: 6.5rem; height: 6.5rem; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); }
 .docs figure .who { font-weight: 600; font-size: 0.9rem; margin-bottom: 0.35rem; }
+.side-card .portrait.small { float: right; width: 4.5rem; height: 4.5rem; border-radius: 50%; object-fit: cover; border: 1px solid var(--line); margin: 0 0 0.4rem 0.6rem; }

@@ -167,7 +167,8 @@ def side_row(s, recs):
     return dict(name=s["n"], text=s.get("t", ""), records=[r for r in s.get("r", []) if r in recs],
                 rel=s.get("vztah", ""), y=s.get("y", ""), years=years(s.get("y")), facts=s.get("f", []),
                 st=s.get("st", ""), status=STATUS.get(s.get("st"), ""), sibling=is_sibling(s),
-                birth=birth_key(s.get("y"), s.get("f", [])))
+                birth=birth_key(s.get("y"), s.get("f", [])), id=slugify(s["n"] + " " + str(s.get("y", ""))),
+                photos=[f"/img/{i}.jpg" for i in s.get("foto", []) if os.path.exists(os.path.join(VYREZY, i + ".jpg"))])
 
 
 def gen(k):
@@ -409,7 +410,9 @@ def main():
                               menu=str(o.get("menu") or ""), tlacitko=str(o.get("tlacitko") or "")) for s, _, o in story_list], root=slugs[1], aliases={a: slugs[a] for a in SAME}, people=people,
                 families=families, records=records, lines=lines,
                 issues=[dict(title=i, text="") if isinstance(i, str) else dict(title=i[0], text=i[1]) for i in ISSUES], stats=stats, hypotheses=hypotheses,
-                docs=[dict(img=d["img"], caption=d["popis"], who=d.get("kdo", ""), people=[slugs[k] for k in d.get("osoby", []) if k in slugs])
+                docs=[dict(img=d["img"], caption=d["popis"], who=d.get("kdo", ""), people=[slugs[k] for k in d.get("osoby", []) if k in slugs],
+                          link=next((f"/osoba/{slugs[s['k']]}/#{slugify(s['n'] + ' ' + str(s.get('y', '')))}" for s in SIDE
+                                     if d.get("kdo") and s["n"] == d["kdo"] and s["k"] in slugs), ""))
                       for d in docs_cfg if os.path.exists(os.path.join(VYREZY, d["img"] + ".jpg"))])
 
     write(os.path.join(WEB, "src", "data", "site.json"), json.dumps(site, ensure_ascii=False, indent=1))

@@ -69,7 +69,13 @@ const path = [...p.path].reverse().filter(Boolean);
       <h2>Příbuzní mimo přímou linii</h2>
       <div class="grid2">
         {p.side.filter((s) => !s.sibling).map((s) => (
-          <div class="card"><h3>{s.name}</h3><p class="small">{s.text}</p>
+          <div class="card side-card" id={s.id}>
+            {s.photos.length > 0 && <a href={s.photos[0]} target="_blank" rel="noopener"><img class="portrait small" src={s.photos[0]} alt={s.name} loading="lazy" /></a>}
+            <h3>{s.name}{s.years && <span class="muted small"> ({s.years})</span>}</h3>
+            {s.rel && <p class="small muted">{s.rel}</p>}
+            {s.facts.length > 0 && <p class="small">{s.facts.join(' · ')}</p>}
+            <p class="small">{s.text}</p>
+            {s.photos.length > 1 && <p class="small">{s.photos.slice(1).map((ph) => <a href={ph} target="_blank" rel="noopener"><img class="avatar" src={ph} alt="" loading="lazy" /></a>)}</p>}
             {s.records.length > 0 && <p class="small">Zápisy: {s.records.filter((r) => records[r]).map((r, i) => <>{i > 0 && ' · '}<a href={href.record(r)}>{records[r].date}</a></>)}</p>}
           </div>
         ))}

@@ -8,7 +8,7 @@ const groups = new Map();
 for (const d of docs) {
   const anc = d.people?.[0] ? people[d.people[0]] : null;
   const key = d.who || anc?.slug || d.img;
-  if (!groups.has(key)) groups.set(key, { who: d.who, anc, items: [] });
+  if (!groups.has(key)) groups.set(key, { who: d.who, link: d.link, anc, items: [] });
   groups.get(key).items.push(d);
 }
 // Pořadí: po manželských párech předků (Kekulé 2n a 2n+1 vedle sebe, výchozí osoba první), po předcích jejich
@@ -26,7 +26,7 @@ const list = [...groups.values()].sort((a, b) =>
     <div class="docs">
       {list.flatMap((g) => g.items.map((d, i) => (
         <figure class={i === 0 ? 'group-start' : ''}>
-          <div class="who">{g.who ? g.who : g.anc ? <PersonLink slug={g.anc.slug} showYears={false} /> : ' '}{g.who && g.anc && <span class="small muted"> · u předka <PersonLink slug={g.anc.slug} showYears={false} /></span>}</div>
+          <div class="who">{g.who ? (g.link ? <a href={g.link}>{g.who}</a> : g.who) : g.anc ? <PersonLink slug={g.anc.slug} showYears={false} /> : ' '}{g.who && g.anc && <span class="small muted"> · u předka <PersonLink slug={g.anc.slug} showYears={false} /></span>}</div>
           <a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a>
           <figcaption>{d.caption}</figcaption>
         </figure>
