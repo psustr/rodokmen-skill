@@ -25,7 +25,7 @@ const email = config.kontakt?.email;
         {stories.map((s) => <a class="btn" href={storyHref(s)}>{s.tlacitko || `Přečíst: ${s.title}`} →</a>)}
       </div>
       {uvod.foto && (
-        <a href={stories.length ? storyHref(stories[0]) : `/img/${uvod.foto}.jpg`}><img src={`/img/${uvod.foto}.jpg`} alt={uvod.foto_popis || ''} /></a>
+        <figure class="teaser-foto"><a href={`/img/${uvod.foto}.jpg`} target="_blank" rel="noopener" title="Zvětšit"><img src={`/img/${uvod.foto}.jpg`} alt={uvod.foto_popis || ''} /></a>{uvod.foto_popis && <figcaption class="small muted">{uvod.foto_popis}</figcaption>}</figure>
       )}
     </section>
   )}
