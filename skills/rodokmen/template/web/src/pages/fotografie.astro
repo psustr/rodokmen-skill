@@ -1,0 +1,20 @@
+---
+// /fotografie/ – všechny rodinné fotografie a dokumenty (data/dokumenty.json), u každé odkaz na osobu.
+import Base from '../layouts/Base.astro';
+import PersonLink from '../components/PersonLink.astro';
+import { docs } from '../lib/data.js';
+---
+<Base title="Fotografie" wide>
+  <h1>Rodinné fotografie a dokumenty</h1>
+  <p class="lead">Fotografie předků a jejich příbuzných a rodinné dokumenty. Kliknutím obrázek zvětšíte; jméno vede na stránku osoby, ke které fotografie patří.</p>
+  {docs.length ? (
+    <div class="docs">
+      {docs.map((d) => (
+        <figure>
+          <a href={`/img/${d.img}.jpg`} target="_blank" rel="noopener"><img src={`/img/${d.img}.jpg`} alt={d.caption} loading="lazy" /></a>
+          <figcaption>{d.caption}{d.people?.length > 0 && <> {d.people.map((s) => <PersonLink slug={s} showYears={false} />)}</>}</figcaption>
+        </figure>
+      ))}
+    </div>
+  ) : <p class="muted">Zatím tu nic není.</p>}
+</Base>

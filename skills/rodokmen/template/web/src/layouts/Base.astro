@@ -1,12 +1,12 @@
 ---
 import '../styles/global.css';
-import { config } from '../lib/data.js';
+import { config, docs } from '../lib/data.js';
 import { stories, manyStories } from '../lib/pribehy.js';
 const siteName = config.nazev || 'Rodokmen';
 const { title, description = config.popis || siteName, wide = false, wider = false, full = false } = Astro.props;
 const path = Astro.url.pathname;
 const groups = [
-  [['/', 'Úvod'], ...(stories.length ? [['/pribehy/', manyStories ? config.pribehy_menu || 'Příběhy' : stories[0].menu || 'Příběh rodu']] : []), ['/zajimavosti/', 'Zajímavosti']],
+  [['/', 'Úvod'], ...(stories.length ? [['/pribehy/', manyStories ? config.pribehy_menu || 'Příběhy' : stories[0].menu || 'Příběh rodu']] : []), ['/zajimavosti/', 'Zajímavosti'], ...(docs?.length ? [['/fotografie/', 'Fotografie']] : [])],
   [['/rody/', 'Rody'], ['/mapa/', 'Mapa'], ['/vejir/', 'Vějíř'], ['/predci/', 'Předci'], ['/zapisy/', 'Zápisy'], ['/hledame/', 'Co hledáme']],
   [['/hledat/', 'Hledat']],
 ];
