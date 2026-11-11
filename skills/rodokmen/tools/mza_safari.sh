@@ -32,6 +32,9 @@ for id in "$@"; do
   done
   touch "$LOCK"   # obnov zámek, ať ho jiný běh nepovažuje za starý
   js 'location.href.indexOf("detail/'$id'")<0 ? "" : Array.from(new Set((document.documentElement.outerHTML.replace(/\\\//g,"/").match(/iip-srv\/iipsrv\.fcgi\/\d+\/[^?"]+\?Deepzoom=[^"]+?\.jp2(?=\.dzi)/g)||[]))).map(x=>"https://www.mza.cz/"+x).join("\n")' | tr '\r' '\n' | grep . > pracovni/mza_paths/$id.tmp
-  if [[ -s pracovni/mza_paths/$id.tmp ]]; then mv pracovni/mza_paths/$id.tmp pracovni/mza_paths/$id.txt; echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
+  new=$(wc -l < pracovni/mza_paths/$id.tmp 2>/dev/null | tr -d ' '); old=$(wc -l < pracovni/mza_paths/$id.txt 2>/dev/null | tr -d ' ')
+  if [[ -s pracovni/mza_paths/$id.tmp && -n $old && $new -lt $(( old / 2 )) ]]; then   # neúplný seznam (výpadek MZA) – nepřepisuj
+    rm -f pracovni/mza_paths/$id.tmp; echo "$id: načetlo se jen $new snímků z $old – MZA asi nejede, zkus to později (mezipaměť ponechána)" >&2
+  elif [[ -s pracovni/mza_paths/$id.tmp ]]; then mv pracovni/mza_paths/$id.tmp pracovni/mza_paths/$id.txt; echo "$id: $(wc -l < pracovni/mza_paths/$id.txt | tr -d ' ') snímků"
   else rm -f pracovni/mza_paths/$id.tmp; echo "$id: v prohlížeči se nepodařilo načíst seznam snímků (ověření? JavaScript z událostí Apple?) – původní mezipaměť ponechána" >&2; fi
 done
