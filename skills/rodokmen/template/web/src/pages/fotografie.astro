@@ -11,7 +11,13 @@ for (const d of docs) {
   if (!groups.has(key)) groups.set(key, { who: d.who, anc, items: [] });
   groups.get(key).items.push(d);
 }
-const list = [...groups.values()].sort((a, b) => (a.anc?.k ?? 1e9) - (b.anc?.k ?? 1e9) || (a.who ? 1 : 0) - (b.who ? 1 : 0) || (a.who || '').localeCompare(b.who || '', 'cs'));
+// Pořadí: po manželských párech předků (Kekulé 2n a 2n+1 vedle sebe, výchozí osoba první), po předcích jejich
+// příbuzní (děti, snachy, potomci – „kdo“), pak další pár; v rámci páru muž, žena, pak příbuzní podle roku narození.
+const born = (g) => +((g.items[0]?.caption || '').match(/^[^(,–]*\((?:\* )?(\d{4})/)?.[1] ?? 9999);   // rok narození z popisku
+const pair = (k) => (k == null ? 1e9 : k === 1 ? 1 : k - (k % 2));
+const list = [...groups.values()].sort((a, b) =>
+  pair(a.anc?.k) - pair(b.anc?.k) || (a.who ? 1 : 0) - (b.who ? 1 : 0) || (a.anc?.k ?? 0) - (b.anc?.k ?? 0) ||
+  born(a) - born(b) || (a.who || '').localeCompare(b.who || '', 'cs'));
 ---
 <Base title="Fotografie" wide>
   <h1>Rodinné fotografie a dokumenty</h1>
