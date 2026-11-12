@@ -234,6 +234,7 @@ Podrobně `reference/web.md`. Ve zkratce:
 ## Fáze 5 – Zveřejnění (volitelné, jen se souhlasem)
 Výchozí cesta je **Netlify** (zdarma): `npm run nasadit`. Přihlášení k Netlify a první propojení webu jsou interaktivní –
 dej je uživateli jako `! npx netlify-cli login` atd. (postup v `reference/web.md`). Pokročilá varianta: vlastní server (Docker/CapRover).
+Nasazuj dávkově, ne po každé změně – bezplatný Netlify má 300 kreditů měsíčně a nasazení stojí 15 (viz „Šetři kredity“ v `reference/web.md`).
 Nic nezveřejňuj bez výslovného souhlasu uživatele.
 
 ## Poznámky pro správce skillu

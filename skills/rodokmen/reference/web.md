@@ -98,6 +98,18 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
    rodinná otázka – proto znovu ověř v anonymním okně, že se ukáže.
    Přihlášení zajišťuje Netlify Edge Function `web/netlify/edge-functions/brana.js` (generuje ji export).
 Další aktualizace = jen `npm run nasadit`. Vlastní doménu lze nastavit v administraci Netlify.
+
+**Šetři kredity Netlify (11/2026).** Bezplatný plán má 300 kreditů měsíčně, každé produkční nasazení stojí 15 kreditů
+(placené plány: Personal 9 USD / 1 000 kreditů, Pro 20 USD / 3 000 – ověř na netlify.com/pricing). Kredity berou i provoz
+a edge function brány. Když dojdou, `netlify deploy` skončí „JSONHTTPError: Forbidden“; běžící web zůstává (poslední
+nasazení), nová verze se nenahraje do obnovy kreditů (datum v administraci: Billing/Usage).
+- Nenasazuj po každé drobné změně. Změny kontroluj v lokálním náhledu (`npm run nahled`) a nasazuj **dávkově** – po
+  dokončeném kole hledání, po nových fotkách nebo na výslovnou žádost uživatele, typicky jednou za týden či dva.
+- Ověření brány dělej `curl` na už nasazený web (anonymně 401, s cookie 200), ne opakovaným nasazováním.
+- „Zkušební“ nasazení (prázdná stránka kvůli ověření brány) dělej jen při prvním zveřejnění.
+- Po „Forbidden“ nezkoušej nasazovat znovu – řekni uživateli, že došly kredity, kolik stojí placený plán a že web
+  s poslední verzí dál běží. Jiný bezplatný hosting bez brány (GitHub Pages ap.) jako náhradu nenabízej – rodokmen
+  se žijícími osobami by byl veřejný.
 **Kredity (bezplatný tarif Netlify):** každé produkční nasazení stojí kredity (měsíční limit, např. 300). Změny proto sbírej
 a zkoušej lokálně (`npm run build` + náhled), nasazuj jen po větší dávce nebo na přání uživatele. Když dojdou, CLI končí
 `JSONHTTPError: Forbidden` (bez dalšího vysvětlení) – web zůstane v poslední podobě až do nového měsíce.
