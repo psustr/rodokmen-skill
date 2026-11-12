@@ -98,6 +98,9 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
    rodinná otázka – proto znovu ověř v anonymním okně, že se ukáže.
    Přihlášení zajišťuje Netlify Edge Function `web/netlify/edge-functions/brana.js` (generuje ji export).
 Další aktualizace = jen `npm run nasadit`. Vlastní doménu lze nastavit v administraci Netlify.
+**Kredity (bezplatný tarif Netlify):** každé produkční nasazení stojí kredity (měsíční limit, např. 300). Změny proto sbírej
+a zkoušej lokálně (`npm run build` + náhled), nasazuj jen po větší dávce nebo na přání uživatele. Když dojdou, CLI končí
+`JSONHTTPError: Forbidden` (bez dalšího vysvětlení) – web zůstane v poslední podobě až do nového měsíce.
 
 **Pozor:** „Netlify Drop“ (přetažení složky v prohlížeči) neumí Edge Functions → web by byl bez přihlášení. Nepoužívat.
 
