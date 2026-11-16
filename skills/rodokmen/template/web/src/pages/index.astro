@@ -40,6 +40,14 @@ const email = config.kontakt?.email;
     </section>
   ))}
 
+  {config.verze?.polozky?.length > 0 && (
+    <section class="card novinky">
+      <h2>Co je nového <span class="small muted">– verze {config.verze.n}, {config.verze.datum}</span></h2>
+      <ul>{config.verze.polozky.slice(0, 6).map((t) => <li set:html={t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')} />)}</ul>
+      <p class="small"><a href="/novinky/">Všechny novinky →</a></p>
+    </section>
+  )}
+
   <div class="stats">
     <div><strong>{stats.ancestors}</strong>známých předků</div>
     <div><strong>{stats.documented}</strong>doloženo matrikou</div>

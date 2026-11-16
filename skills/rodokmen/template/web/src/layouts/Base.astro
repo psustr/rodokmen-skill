@@ -2,13 +2,14 @@
 import '../styles/global.css';
 import { config, docs } from '../lib/data.js';
 import { stories, manyStories } from '../lib/pribehy.js';
+import novinkyRaw from '../generated/novinky.md?raw';
 const siteName = config.nazev || 'Rodokmen';
 const { title, description = config.popis || siteName, wide = false, wider = false, full = false } = Astro.props;
 const path = Astro.url.pathname;
 const groups = [
   [['/', 'Úvod'], ...(stories.length ? [['/pribehy/', manyStories ? config.pribehy_menu || 'Příběhy' : stories[0].menu || 'Příběh rodu']] : []), ['/zajimavosti/', 'Zajímavosti'], ...(docs?.length ? [['/fotografie/', 'Fotografie']] : [])],
   [['/rody/', 'Rody'], ['/mapa/', 'Mapa'], ['/vejir/', 'Vějíř'], ['/predci/', 'Předci'], ['/zapisy/', 'Zápisy'], ['/hledame/', 'Co hledáme']],
-  [['/hledat/', 'Hledat']],
+  [...(config.verze || novinkyRaw.trim() ? [['/novinky/', 'Novinky']] : []), ['/hledat/', 'Hledat']],
 ];
 const current = (url) => ((url === '/' ? path === '/' : path.startsWith(url)) ? 'page' : undefined);
 ---
@@ -45,7 +46,7 @@ const current = (url) => ((url === '/' ? path === '/' : path.startsWith(url)) ? 
       <slot />
     </main>
     {!full && <footer class="site-footer">
-      {config.zapati || 'Dohledáno v digitalizovaných matrikách'} · rodinný web, neveřejný
+      {config.zapati || 'Dohledáno v digitalizovaných matrikách'} · rodinný web, neveřejný{config.verze && <> · <a href="/novinky/">verze {config.verze.n} ({config.verze.datum})</a></>}
     </footer>}
   </body>
 </html>

@@ -1,0 +1,11 @@
+---
+// /novinky/ – co je na webu nového (data/novinky.md; verze se zvýší při každém nasazení s novými změnami).
+import Base from '../layouts/Base.astro';
+import { Content } from '../generated/novinky.md';
+import raw from '../generated/novinky.md?raw';
+---
+<Base title="Novinky">
+  <h1>Co je nového</h1>
+  <p class="lead">Seznam změn webu po verzích – když se sem vrátíte po čase, hned uvidíte, kam se podívat.</p>
+  {raw.trim() ? <div class="prose"><Content /></div> : <p class="muted">Zatím tu nic není.</p>}
+</Base>

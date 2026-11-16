@@ -77,6 +77,11 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   v `obrácených apostrofech` se tam převedou na odkazy na stránky zápisů; první řádek `# …` a komentáře se vynechají.
   Piš ji jako veřejný seznam (bez oslovení a jmen správců), žijící jen jménem a rokem narození. Dopis správci stromu
   (`pracovni/…`) z ní pak jen vychází.
+- **Novinky a verze webu** (`data/novinky.md`): oddíl `## Připravuje se` sbírá krátké odrážky o změnách od posledního
+  nasazení (s odkazy `[text](/adresa/)`); **připiš tam řádek po každé změně, kterou návštěvník uvidí** (nová osoba, zápis,
+  příběh, fotky, stránka). Při `npm run nasadit` se oddíl sám přejmenuje na `## Verze N (datum)` a soubor se přepíše –
+  pak ho commitni. Na webu: stránka `/novinky/` (v menu), na úvodu karta „Co je nového“ s poslední verzí a v zápatí
+  „verze N“. V lokálním náhledu je vidět i „Připravuje se“, na zveřejněném webu ne.
 - `citlive_schvaleno`: seznam úryvků textu, které uživatel na webu schválil (např. `["oběsil se ve stodole"]`) –
   `kontrola.py` je pak nehlásí jako `CITLIVÉ`. Úryvek musí obsahovat hlášené slovo; když se text změní, hlásí se znovu.
 

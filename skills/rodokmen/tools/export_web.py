@@ -8,7 +8,7 @@ web/nginx.conf a web/netlify/edge-functions/brana.js.
 
 Spouští se z web/ příkazem `npm run data` (nebo přímo `python3 -I tools/export_web.py`, na Windows `python -I -X utf8 …`).
 """
-import hashlib, html, json, os, re, shutil, subprocess, sys, unicodedata
+import datetime, hashlib, html, json, os, re, shutil, subprocess, sys, unicodedata
 for _s in (sys.stdout, sys.stderr):   # UTF-8 výstup i na Windows bez -X utf8 (cp1250 neumí třeba „→“)
     if hasattr(_s, "reconfigure"):
         _s.reconfigure(encoding="utf-8", errors="replace")
@@ -111,6 +111,34 @@ def stories(cfg):
         out.append(((order.index(slug) if slug in order else len(order), poradi, slug != "pribeh", str(fm.get("title", slug))),
                     slug, path, opts))
     return [(slug, path, opts) for _, slug, path, opts in sorted(out)]
+
+
+def novinky(deploy):
+    """Seznam změn webu (data/novinky.md). Oddíl „## Připravuje se“ sbírá změny od posledního nasazení; při nasazení
+    (`npm run nasadit` = --nasazeni) se z něj stane „## Verze N (datum)“ a soubor se přepíše (nezapomeň commit).
+    Vrací (text pro web, dict(n, datum, polozky) poslední vydané verze nebo None)."""
+    path = os.path.join(DATA, "novinky.md")
+    if not os.path.exists(path):
+        return "", None
+    text = open(path, encoding="utf-8").read()
+    ver = [int(m) for m in re.findall(r"^## Verze (\d+)", text, re.M)]
+    m = re.search(r"^## Připravuje se[^\n]*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    if deploy and m and strip_comments(m.group(1)).strip():
+        n = max(ver, default=0) + 1
+        today = datetime.date.today()
+        text = (text[:m.start()] + "## Připravuje se\n\n" + f"## Verze {n} ({today.day}. {today.month}. {today.year})\n"
+                + m.group(1).strip() + "\n\n" + text[m.end():])
+        write(path, text)
+        print(f"novinky: vydána verze {n} webu (data/novinky.md – commitni)")
+    web = strip_comments(re.sub(r"^# .*\n", "", text, count=1))
+    if not deploy:
+        web = web.replace("## Připravuje se", "## Připravuje se (jen v náhledu, zatím nezveřejněno)", 1)
+    else:
+        web = re.sub(r"^## Připravuje se[^\n]*\n(\s*\n)*(?=^## |\Z)", "", web, flags=re.M)
+    last = re.search(r"^## Verze (\d+) \(([^)]*)\)\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    info = dict(n=int(last.group(1)), datum=last.group(2),
+                polozky=[l[2:].strip() for l in strip_comments(last.group(3)).splitlines() if l.startswith("- ")]) if last else None
+    return web, info
 
 
 def norm_answer(text):
@@ -405,6 +433,7 @@ def main():
     story_list = stories(cfg)
     public_cfg = {k: v for k, v in cfg.items() if k != "prihlaseni"}
     public_cfg["maPribeh"] = bool(story_list)
+    novinky_web, public_cfg["verze"] = novinky("--nasazeni" in sys.argv)
     site = dict(config=public_cfg, places=places,
                 stories=[dict(slug=s, rod=o.get("rod") if isinstance(o.get("rod"), int) else None,
                               menu=str(o.get("menu") or ""), tlacitko=str(o.get("tlacitko") or "")) for s, _, o in story_list], root=slugs[1], aliases={a: slugs[a] for a in SAME}, people=people,
@@ -426,6 +455,7 @@ def main():
     geni = strip_comments(re.sub(r"^# .*\n", "", open(path, encoding="utf-8").read(), count=1)) if os.path.exists(path) else ""
     geni = re.sub(r"`([a-z0-9_]+)`", lambda m: f"[{recs[m.group(1)]['title']}](/zdroj/{m.group(1)}/)" if m.group(1) in recs else m.group(0), geni)
     write(os.path.join(gen_dir, "geni.md"), geni)
+    write(os.path.join(gen_dir, "novinky.md"), novinky_web)
     story_dir = os.path.join(gen_dir, "pribehy")   # web/src/pages/pribehy/ je čte všechny (import.meta.glob)
     shutil.rmtree(story_dir, ignore_errors=True)
     for slug, path, _ in story_list:
