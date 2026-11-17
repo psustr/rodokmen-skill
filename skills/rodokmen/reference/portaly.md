@@ -171,6 +171,12 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
 - **ZA Opava (od 9. 11. 2026):** obrázkový server images.archives.cz vrací 404 na požadavky, které nejsou z prohlížeče
   v badatelně, a prohlížeč je skriptu nedovolí přečíst (chybí CORS) – `soal_zoomify.py` pro Opavu nefunguje a za prohlížeč
   se nevydávej. Snímky z Opavy ať si uživatel uloží ručně (v prohlížeči) do `pracovni/`, ty pak čti a vyřezávej.
+- **Snímky MZA = pohled prohlížeče (od 0.5.30):** `mza.py snimek <id> <n> out.jpg` otevře snímek v prohlížeči MZA
+  (`detail/<id>?image=…`), počká, až ho prohlížeč sám načte, a uloží vykreslené plátno – totéž jako ruční „Uložit obrázek
+  jako…“ (`tools/mza_obrazovka.sh`). Archiv dostane jen požadavky běžného listování. Rozlišení = velikost okna (zvětši okno
+  prohlížeče / celá obrazovka); na čtení stačí, na výřez detailu v okně přibliž a ulož znovu. Dřívější skládání všech
+  dlaždic v plném rozlišení (`mza_snimek.sh`, stovky požadavků na snímek) vedlo pokaždé k blokaci – jen výjimečně přes
+  `RODOKMEN_MZA_DLAZDICE=1`.
 - **Šetrnost (11/2026):** po několika dnech stahování ze dvou sezení najednou MZA dočasně zablokovalo domácí IP adresu
   (Safari ověřením prošlo, snímky ale 403 / spojení zavřeno; z telefonu web šel). `mza.py snimek` proto stahuje po jednom
   snímku ze všech projektů na počítači (společný zámek `~/.cache/rodokmen-mza`) s pauzou `RODOKMEN_MZA_PAUZA` (výchozí 20 s).

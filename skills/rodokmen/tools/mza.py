@@ -7,7 +7,7 @@ Použití:
   mza.py info <odkaz nebo id knihy>              → číslo knihy, původce, roky, části a počet snímků
   mza.py snimek <odkaz s ?image=…> <out.jpg> [-1]
   mza.py snimek <id knihy> <pořadí snímku> <out.jpg> [-1]
-                                                 → snímek uloží prohlížeč (tools/mza_snimek.sh); -1 = poloviční rozlišení
+                                                 → snímek uloží prohlížeč (tools/mza_obrazovka.sh – pohled prohlížeče, jako Uložit obrázek jako); -1 se ignoruje
 Starý odkaz lze rovnou dát i do `info` a `snimek` (převede se sám).
 Pozor: id v starých odkazech actapublica.eu NENÍ id v nových odkazech – vždy převádět.
 Stahuje přes curl (Python urllib server odmítá). Snímky šetrně – jeden po druhém, už stažené nestahuj znovu.
@@ -199,7 +199,11 @@ def main():
     elif cmd == "snimek" and len([x for x in a if x != "-1"]) == 4:   # <id> <n> <out>: přes prohlížeč
         root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         args = [x for x in a[1:] if x != "-1"]
-        sys.exit(subprocess.run(["zsh", os.path.join(root, "tools", "mza_snimek.sh"), *args] + (["-1"] if "-1" in a else [])).returncode)
+        # výchozí: uložit to, co prohlížeč MZA sám vykreslí (jako „Uložit obrázek jako…“) – žádné vlastní stahování dlaždic;
+        # skládání z dlaždic (mza_snimek.sh) jen výslovně přes RODOKMEN_MZA_DLAZDICE=1 – archiv ho bere jako nápor a blokuje
+        nastroj = "mza_snimek.sh" if os.environ.get("RODOKMEN_MZA_DLAZDICE") == "1" else "mza_obrazovka.sh"
+        extra = (["-1"] if "-1" in a and nastroj == "mza_snimek.sh" else [])
+        sys.exit(subprocess.run(["zsh", os.path.join(root, "tools", nastroj), *args] + extra).returncode)
     elif cmd == "snimek":
         half = "-1" in a
         a = [x for x in a if x != "-1"]
