@@ -124,10 +124,10 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   jeden po druhém a ověření MZA je pro všechny projekty stejné. Druhý prohlížeč (`pracovni/prohlizec.txt`) má smysl jen
   tehdy, když dva projekty **současně hledají v badatelně ZA Opava / digi.archives.cz** – výsledky hledání tam platí
   jen v relaci a nové hledání jednoho projektu může druhému zneplatnit seznam.
-- **Zakryté okno prohlížeč nepřekresluje** (`document.hidden`): dlaždice snímku se nenačtou a plátno zůstane černé
-  nebo staré. `mza_obrazovka.sh` proto kartu projektu na chvíli udělá aktuální, dá okno dopředu a pak vrátí předchozí
-  aplikaci (`prohlizec_popredi` / `prohlizec_vrat` v `prohlizec.sh`). Uživateli řekni, že mu Safari na pár sekund
-  vyskočí dopředu; nechce-li to, ať má okno Safari viditelné (např. na druhém monitoru) – pak nic nevyskakuje.
+- **Zakryté okno prohlížeč nepřekresluje** (`document.hidden`, i za oknem na celou obrazovku nebo na jiné ploše) a časovače
+  stránky brzdí. `mza_obrazovka.sh` proto překreslení prohlížeče MZA (OpenSeadragon) spouští sám při každé kontrole
+  (`viewer.world.update()` + `draw()`, ~1 dlaždice za sekundu) a ukládá až po úplném načtení (`getFullyLoaded()`).
+  Okno nemusí být vidět ani vyskakovat; snímek trvá 20–70 s (šetrné k archivu).
 - **Ostřejší snímek MZA:** `mza_obrazovka.sh <id> <n> out.jpg x0,y0,x1,y1` (zlomky 0–1 snímku) přiblíží v prohlížeči
   jen tu oblast (jako zoom myší) a uloží ji v plném rozlišení okna. Celá dvoustrana má jen ~1300 × 1000 px; na čtení
   jména přibliž polovinu stránky v pruzích (např. `0.05,0.2,0.5,0.42`).
