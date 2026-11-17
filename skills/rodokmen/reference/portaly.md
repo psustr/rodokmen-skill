@@ -192,6 +192,14 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
 - **Rejstřík bývá samostatná kniha** s jiným id (Prostějov: oddaní 1808–1829 = kn. 5947, rejstřík ženichů = kn. 5997) –
   než prohlásíš knihu za „bez rejstříku“, projdi `mza.py hledat` celé fary (roky se překrývají, typ „I“/rejstřík).
   Rejstříky oddaných bývají jen podle ženicha – nevěstu jimi nenajdeš.
+- **Strojopisné rejstříky podle rodin** (pozdější přepis archivářem, např. fara Protivanov N 1747–1784 = kn. 6034): rodiny
+  abecedně podle příjmení, v záhlaví „Příjmení Otec – Matka“, písmeno obce (L = Lipová, P = Protivanov …) a číslo,
+  pod ním děti s „folio/pořadí“ (římské „III“ = třetí kniha fary). **Číslo v záhlaví rodiny je odkaz na sňatek rodičů**
+  (str./pořadí v knize oddaných téhož období) – tak najdeš sňatek bez listování. Ověřeno u Protivanova (2 sňatky, 11/2026);
+  u jiné fary si to nejdřív ověř na jednom známém sňatku. Čísla dětí odkazují na knihu narozených (strany, ne snímky –
+  přepočet ze dvou známých stran).
+- **Číslo v ručním rejstříku** (sloupce „Name | Folio“) patří k jménu vlevo od něj; oddíly I, II … bývají různé knihy
+  nebo období – nejdřív zjisti, kam oddíl vede (nejvyšší folio vs. počet stran knih), než podle čísla listuješ.
 
 ## Pražské policejní přihlášky 1850–1914 (Národní archiv) – `tools/policie_prihlasky.py`
 - Karty pražských rodin: hlava rodiny, manželka s rokem a místem narození, děti s roky, adresy, někdy místo sňatku.
