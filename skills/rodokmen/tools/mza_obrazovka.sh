@@ -54,8 +54,15 @@ trap 'prohlizec_vrat "$pred"; touch $L/posledni; rmdir $L/zamek 2>/dev/null' EXI
 cekej
 if [[ -n $oblast ]]; then
   IFS=, read x0 y0 x1 y1 <<< "$oblast"
-  js "(function(){var h=viewer.world.getItemAt(0).getBounds().height;viewer.viewport.fitBounds(new OpenSeadragon.Rect($x0,$y0*h,$x1-$x0,($y1-$y0)*h),true);return 'ok'})()" >/dev/null
-  sleep 1; cekej
+  # přiblížit a ověřit, že pohled opravdu ukazuje oblast (prohlížeč ho po změně velikosti okna může vrátit)
+  ok=
+  for pokus in 1 2 3; do
+    js "(function(){var h=viewer.world.getItemAt(0).getBounds().height;viewer.viewport.fitBounds(new OpenSeadragon.Rect($x0,$y0*h,$x1-$x0,($y1-$y0)*h),true);return 'ok'})()" >/dev/null
+    sleep 1; cekej
+    ok=$(js "(function(){var h=viewer.world.getItemAt(0).getBounds().height,b=viewer.viewport.getBounds(true),cx=($x0+$x1)/2,cy=($y0+$y1)/2*h;return Math.abs(b.x+b.width/2-cx)<0.02&&Math.abs(b.y+b.height/2-cy)<0.02&&b.width<($x1-$x0)*1.6+0.02?'ano':'ne'})()")
+    [[ $ok == ano ]] && break
+  done
+  [[ $ok == ano ]] || { echo "MZA: přiblížení se nepodařilo – zkus to znovu" >&2; exit 1; }
 fi
 
 # ulož plátno („Uložit obrázek jako…“)
