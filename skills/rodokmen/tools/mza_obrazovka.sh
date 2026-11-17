@@ -42,14 +42,15 @@ cekej() {
 prev=x; same=0; st=?
 for i in {1..90}; do
   sleep 2
-  st=$(js "location.href.indexOf('$img')<0||document.readyState!='complete'?'čeká':(function(){var c=Array.from(document.querySelectorAll('.openseadragon-canvas canvas')).sort((a,b)=>b.width*b.height-a.width*a.height)[0];if(!c||c.width<400)return 'čeká';try{var g=c.getContext('2d').getImageData(0,0,c.width,c.height).data,m=0,k=0;for(var j=0;j<g.length;j+=4004){m+=g[j]+g[j+1]+g[j+2];k++}if(m/k/3<25)return 'čeká';var d=c.toDataURL('image/jpeg',0.5);return c.width+'x'+c.height+':'+d.length}catch(e){return 'chyba '+e.name}})()")
+  st=$(js "location.href.indexOf('$img')<0||document.readyState!='complete'?'čeká':document.hidden?'skryto':(function(){var c=Array.from(document.querySelectorAll('.openseadragon-canvas canvas')).sort((a,b)=>b.width*b.height-a.width*a.height)[0];if(!c||c.width<400)return 'čeká';try{var g=c.getContext('2d').getImageData(0,0,c.width,c.height).data,m=0,k=0;for(var j=0;j<g.length;j+=4004){m+=g[j]+g[j+1]+g[j+2];k++}if(m/k/3<25)return 'čeká';var d=c.toDataURL('image/jpeg',0.5);return c.width+'x'+c.height+':'+d.length}catch(e){return 'chyba '+e.name}})()")
+  if [[ $st == skryto ]]; then [[ -z $pred ]] && pred=$(prohlizec_popredi "mza.cz/actapublica"); continue; fi
   [[ $st == chyba* || $st == NO-TAB ]] && { echo "MZA: $st – přestaň a zkus to až později" >&2; exit 1; }
   if [[ $st != čeká && $st == $prev ]]; then (( same++ )); (( same >= 3 )) && break; else same=0; fi
   prev=$st
 done
 (( same >= 3 )) || { echo "MZA: obrázek se v prohlížeči nenačetl (stav $st) – přestaň a zkus to až později" >&2; exit 1; }
 }
-pred=$(prohlizec_popredi "mza.cz/actapublica")
+pred=
 trap 'prohlizec_vrat "$pred"; touch $L/posledni; rmdir $L/zamek 2>/dev/null' EXIT INT TERM
 cekej
 if [[ -n $oblast ]]; then
@@ -59,7 +60,7 @@ if [[ -n $oblast ]]; then
   for pokus in 1 2 3; do
     js "(function(){var h=viewer.world.getItemAt(0).getBounds().height;viewer.viewport.fitBounds(new OpenSeadragon.Rect($x0,$y0*h,$x1-$x0,($y1-$y0)*h),true);return 'ok'})()" >/dev/null
     sleep 1; cekej
-    ok=$(js "(function(){var h=viewer.world.getItemAt(0).getBounds().height,b=viewer.viewport.getBounds(true),cx=($x0+$x1)/2,cy=($y0+$y1)/2*h;return Math.abs(b.x+b.width/2-cx)<0.02&&Math.abs(b.y+b.height/2-cy)<0.02&&b.width<($x1-$x0)*1.6+0.02?'ano':'ne'})()")
+    ok=$(js "(function(){var h=viewer.world.getItemAt(0).getBounds().height,b=viewer.viewport.getBounds(true),cx=($x0+$x1)/2,cy=($y0+$y1)/2*h;return Math.abs(b.x+b.width/2-cx)<0.02&&Math.abs(b.y+b.height/2-cy)<0.02&&Math.min(b.width/($x1-$x0),b.height/(($y1-$y0)*h))<1.15?'ano':'ne'})()")
     [[ $ok == ano ]] && break
   done
   [[ $ok == ano ]] || { echo "MZA: přiblížení se nepodařilo – zkus to znovu" >&2; exit 1; }
