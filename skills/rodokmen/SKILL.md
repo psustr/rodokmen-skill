@@ -177,8 +177,8 @@ Ať zmíní i zjevně související výskyty (viz krok 6 výše). Výstupy pomoc
 **Jejich čtení vždy ověř sám na snímku** (`python3 -I tools/overit.py <snímek> x0,y0,x1,y1 pracovni/over`, souřadnice jako zlomky 0–1 šířky a výšky, ne pixely, rozdělí zápis
 na dvě čitelné poloviny), než ho zapíšeš jako `doc`. Uživateli to vysvětli správně: pomocníci nečtou hůř, je to stejný
 model. Jde o princip čtyř očí a pomocník nemá kontext (dvě rodiny stejného jména ve vsi, dva Janové na statku).
-Prohlížeč může mít najednou jen jeden pomocník, proto dávej přednost nástrojům bez prohlížeče. Běží-li u uživatele
-víc projektů rodokmenu najednou, má mít každý jiný prohlížeč (`pracovni/prohlizec.txt`, viz `reference/portaly.md`).
+Prohlížeč může mít najednou jen jeden pomocník, proto dávej přednost nástrojům bez prohlížeče. Víc projektů rodokmenu
+najednou zvládne jeden prohlížeč (každý má vlastní kartu); jiný prohlížeč jen při souběžném hledání v badatelně ZA Opava (viz `reference/portaly.md`).
 **Pomocníky spouštěj na levnějším modelu** (Agent s `model: "sonnet"`): hledání a první čtení zvládnou a stojí zlomek
 kreditů. Ověření na snímku a zápis do dat dělá hlavní model (ty). Uživateli to řekni, ať ví, proč kredity tolik neubývají.
 Osvědčilo se 3–4 pomocníci na různé větve a archivy současně, jedno kolo ≈ 15–25 nových předků.

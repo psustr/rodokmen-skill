@@ -3,7 +3,7 @@
 # obrázků. Otevře knihu v prohlížeči (Safari nebo Google Chrome, viz tools/prohlizec.sh; ověření projde samo), uloží
 # podepsané adresy všech snímků do pracovni/mza_paths/<id>.txt; pak `tools/mza.py snimek <id> <n> out.jpg` stahuje normálně přes curl (podpis platí pár hodin).
 # Jednou předem: Safari → Nastavení → Pokročilé „Zobrazovat funkce pro vývojáře“, Vývojář → „Povolit JavaScript z událostí Apple“;
-# Chrome → Zobrazit → Pro vývojáře → „Povolit JavaScript z událostí Apple“. Jeden prohlížeč na projekt: pracovni/prohlizec.txt.
+# Chrome → Zobrazit → Pro vývojáře → „Povolit JavaScript z událostí Apple“. Prohlížeč: pracovni/prohlizec.txt (stačí jeden pro všechny projekty).
 cd "$(dirname "$0")/.."; mkdir -p pracovni/mza_paths
 source tools/prohlizec.sh   # Safari nebo Google Chrome: RODOKMEN_PROHLIZEC / pracovni/prohlizec.txt
 js() { prohlizec_js "mza.cz/actapublica" "$1"; }
