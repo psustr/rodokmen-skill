@@ -1,13 +1,16 @@
----
-name: lanove-rejstriky
-description: Hledání předků v moravských lánových rejstřících 1656–1679 (MZA Brno, fond D 1, online v ARON) – najde knihu panství pro obec, stáhne snímky, pomůže najít obec a hospodáře, přepsat zápis a navázat usedlost na matriky a pozemkové knihy. Použij v rodokmenu, když předek na Moravě žil kolem 1650–1680 (nejstarší matriky, „za matrikami“), nebo když uživatel řekne „lánový rejstřík“, „lánová vizitace“, „kdo seděl na gruntě v 17. století“.
----
-
 # Lánové rejstříky (Morava 1656–1679)
 
-Doplněk skillu **rodokmen** (projekt, data a pravidla jsou jeho – `data/STAV.md`, `research_log.md`, „doc“ jen
-z přečteného snímku, nejistoty „(?)“). Když projekt ještě neexistuje, nejdřív načti skill `rodokmen`.
-Mluv česky a stručně, staré pojmy vysvětli (lán, láník, pustý grunt).
+Součást skillu **rodokmen** (projekt, data a pravidla jsou jeho – `data/STAV.md`, `research_log.md`, „doc“ jen
+z přečteného snímku, nejistoty „(?)“). Staré pojmy vysvětli (lán, láník, pustý grunt).
+
+**Nástroje:** `tools/lanove.py` (hledání knihy, info, snímek, odkaz, svazek) a `tools/aron_obrazovka.sh` (snímek uloží
+**prohlížeč** – otevře ho v prohlížeči ARON, počká na vykreslení, klikne na „Celá obrazovka“ a uloží pohled jako
+„Uložit obrázek jako“; žádné stahování dlaždic skriptem). Metadata knih stahuje `lanove.py` s poctivou identifikací.
+Index všech 372 knih fondu je sdílený pro všechny projekty v `~/.cache/rodokmen-lanove/` (první `hledat` ho vytvoří,
+~15 min, jen popisy s pauzou). Snímky drž i ve sdíleném archivu (např. `~/Work/rodokmen-archiv/lanove-rejstriky/
+<sign>_<panství>/`), ať se ze stejné knihy nestahuje znovu. Přiblížení oblasti (`… x0,y0,x1,y1`, zlomky pohledu)
+posílá skutečné otočení kolečkem a tažení myší (CGEvent) – vyžaduje Zpřístupnění pro terminál (Nastavení systému →
+Soukromí a zabezpečení → Zpřístupnění); obvykle stačí pohled celé obrazovky (~3000×1560 px) a výřezy z něj.
 
 ## Co to je a co z toho zjistíme
 - Soupis poddanské (rustikální) půdy na Moravě po třicetileté válce, kvůli daním. **Jen Morava** (ne Čechy – tam berní rula
@@ -26,15 +29,13 @@ Mluv česky a stručně, staré pojmy vysvětli (lán, láník, pustý grunt).
 ## Postup
 1. **Obec a doba.** Z dat projektu: obec a roky nejstaršího předka (např. sňatek 1664, děti 1671–1683).
    Má smysl, když žil (nebo jeho otec) v letech 1656–1679 na Moravě.
-2. **Najdi knihu:** `python3 -I tools/lanove.py hledat "Obec"` → kniha (apu id), panství, roky, počet snímků.
-   Obec mohla patřit k jinému panství než později – věř seznamu obcí knihy, ne dnešnímu okresu.
-   Nic? Zkus německé jméno, dřívější jméno, sousední větší obec; pustiny mají v inventáři vlastní jméno.
+2. **Najdi knihu:** `python3 -I tools/lanove.py hledat "Obec"` → kniha (apu id), panství, roky, počet snímků, obce z popisu.
+   **Popisy obcí v ARONu nejsou úplné** (u knihy Konice jen Konice, Křemenec, Runářov) – nic? Zkus sousední obce,
+   panství, kam obec tehdy patřila (vrchnost, klášter), německé jméno; pak obec ověř na snímcích knihy.
    Zapiš svazek: `python3 -I tools/lanove.py svazek <apu>` (do `data/svazky.json`, klíč „lr“ + 6 znaků apu).
-3. **Najdi obec v knize.** Kniha nemá rejstřík a obce nejdou abecedně. Nejdřív náhledy:
-   `python3 -I tools/lanove.py nahledy <apu> 1 40 pracovni/lr/` – tabla po 20 snímcích, jen hlavičky (horní třetina),
-   ať se zahlédne velký nadpis obce („Dorff …“, „Ves …“, „Gemein …“). Pak kandidátní snímky celé:
-   `python3 -I tools/lanove.py snimek <apu> <n> 1 pracovni/lr/<apu8>_<n>.jpg` a čti po částech (výřez
-   `x0,y0,x1,y1` jako 5. parametr). Obec mívá 1–6 snímků; první vizitace bývá v knize zvlášť od revizitace –
+3. **Najdi obec v knize.** Kniha nemá rejstřík a obce nejdou abecedně. Ulož snímky po jednom
+   (`python3 -I tools/lanove.py snimek <apu> <n> pracovni/lr/<sign>/<n>.jpg`, ~15 s + pauza) a z nich si udělej
+   tablo náhledů a výřezy hlaviček – velký nadpis obce („Dorff …“, „Markt …“, „Gemein …“, „Ves …“). Obec mívá 1–6 snímků; první vizitace bývá v knize zvlášť od revizitace –
    hledej obec v obou. Do deníku zapisuj prošlé snímky i neúspěšné.
 4. **Přečti hospodáře obce celé** (ne jen „naše“ jméno): pořadí, jméno, druh usedlosti, výměra, osedlý/pustý,
    poznámky, v revizitaci i „starý“ hospodář. Pozor na německou kurentu (Schuster × Fischer, Müller × Miller,
@@ -58,7 +59,7 @@ Mluv česky a stručně, staré pojmy vysvětli (lán, láník, pustý grunt).
 - Kniha = panství z doby vizitace; panství se pak měnila (koupě, slučování) – v 18. stol. bývá obec jinde.
 - Pustý grunt s cizím jménem v revizitaci často znamená, že ho mezitím někdo osadil – hledej jméno v matrice
   téže doby (sňatek, kmotrovství).
-- Snímky jsou velké (JPEG2000 přes Deep Zoom); stahuj je jen do souborů, prohlížej výřezy, šetrně jeden po druhém.
-  Když mza.cz přestane odpovídat (časový limit), počkej pár minut – není to chyba nástroje.
+- Snímky ukládá jen prohlížeč, jeden po druhém (společný zámek s MZA). Když archiv přestane odpovídat, přestaň a zkus
+  to za hodiny – neobcházej to jinou sítí ani skriptem.
 - Edice a pomůcky (tištěné, knihovny/Kramerius): F. Matějek, *Lánové rejstříky olomouckého kraje z let 1675–1678*;
   MZA má k fondu nový inventář s místním rejstříkem (D. Štaud 2017) – přílohy fondu v ARON.
