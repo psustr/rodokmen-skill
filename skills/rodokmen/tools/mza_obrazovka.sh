@@ -39,11 +39,15 @@ if [[ $tady == NO-TAB ]]; then prohlizec_otevri "$url"; elif [[ $tady != *$img* 
 
 # počkej, až je stránka načtená a plátno prohlížeče se přestane měnit (obrázek dokreslen)
 cekej() {
-prev=x; same=0; st=?
+prev=x; same=0; st=?; skryto=0
 for i in {1..90}; do
   sleep 2
   st=$(js "location.href.indexOf('$img')<0||document.readyState!='complete'?'čeká':document.hidden?'skryto':(function(){var c=Array.from(document.querySelectorAll('.openseadragon-canvas canvas')).sort((a,b)=>b.width*b.height-a.width*a.height)[0];if(!c||c.width<400)return 'čeká';try{var g=c.getContext('2d').getImageData(0,0,c.width,c.height).data,m=0,k=0;for(var j=0;j<g.length;j+=4004){m+=g[j]+g[j+1]+g[j+2];k++}if(m/k/3<25)return 'čeká';var d=c.toDataURL('image/jpeg',0.5);return c.width+'x'+c.height+':'+d.length}catch(e){return 'chyba '+e.name}})()")
-  if [[ $st == skryto ]]; then [[ -z $pred ]] && pred=$(prohlizec_popredi "mza.cz/actapublica"); continue; fi
+  if [[ $st == skryto ]]; then
+    [[ -z $pred ]] && pred=$(prohlizec_popredi "mza.cz/actapublica")
+    (( skryto++ >= 5 )) && { echo "MZA: okno $PROHLIZEC je skryté i po vyvolání (jiná plocha, okno na celou obrazovku?) – dej ho na viditelné místo" >&2; exit 1; }
+    continue
+  fi
   [[ $st == chyba* || $st == NO-TAB ]] && { echo "MZA: $st – přestaň a zkus to až později" >&2; exit 1; }
   if [[ $st != čeká && $st == $prev ]]; then (( same++ )); (( same >= 3 )) && break; else same=0; fi
   prev=$st
