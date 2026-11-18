@@ -4,9 +4,10 @@ Součást skillu **rodokmen** (projekt, data a pravidla jsou jeho – `data/STAV
 z přečteného snímku, nejistoty „(?)“). Staré pojmy vysvětli (lán, láník, pustý grunt).
 
 **Nástroje:** `tools/lanove.py` (hledání knihy, info, snímek, odkaz, svazek) a `tools/aron_obrazovka.sh` (snímek uloží
-**prohlížeč**: snímky ARONu leží na stejném obrázkovém serveru MZA jako matriky, skript je proto otevře v kartě matrik
-MZA (Acta Publica) tamním prohlížečem obrázků v dočasném panelu, počká na vykreslení a uloží plátno jako „Uložit obrázek
-jako“; žádné stahování dlaždic skriptem, žádné cizí hlavičky). Funguje i se **skrytým oknem a zamčenou obrazovkou** –
+**prohlížeč**: v kartě ARONu načte stejnou knihovnu prohlížeče obrázků, jakou používá MZA, otevře v ní snímek
+v dočasném panelu, počká na vykreslení a uloží plátno jako „Uložit obrázek jako“; žádné stahování dlaždic skriptem,
+žádné cizí hlavičky; od 18. 11. 2026 MZA odmítá snímky ARONu načtené ze stránek Acta Publica, proto karta ARONu).
+Funguje i se **skrytým oknem a zamčenou obrazovkou** –
 uživatel může dál pracovat. Velikost panelu `RODOKMEN_ARON_PANEL` (výchozí 1600x1000 → ~3200×2000 px na Retině);
 přiblížení oblasti `… x0,y0,x1,y1` (zlomky 0–1 snímku) dá vyšší rozlišení. Metadata knih stahuje `lanove.py` s poctivou
 identifikací. Index všech 372 knih fondu je sdílený pro všechny projekty v `~/.cache/rodokmen-lanove/` (první `hledat`

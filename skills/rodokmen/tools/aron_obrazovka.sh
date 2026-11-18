@@ -1,10 +1,11 @@
 #!/bin/zsh
 # aron_obrazovka.sh <apu knihy> <pořadí snímku> <out.jpg> [x0,y0,x1,y1]
 # Snímek z ARONu MZA (lánové rejstříky, fond D 1) uloží uživatelův prohlížeč, a to i ve skryté kartě a při zamčené
-# obrazovce: snímky ARONu leží na stejném obrázkovém serveru MZA jako matriky, takže je v kartě matrik MZA (Acta Publica)
-# otevře tamní prohlížeč obrázků (OpenSeadragon) v dočasném panelu, počká na vykreslení a uloží plátno (jako
-# „Uložit obrázek jako“). Žádné dlaždice skriptem, žádné cizí hlavičky – požadavky posílá prohlížeč stránky MZA.
-# Prohlížeč ARONu samotný ve skryté kartě nevykresluje a nedá se ovládat, proto tahle cesta.
+# obrazovce: v kartě ARONu (mza.cz/aron) načte stejnou knihovnu prohlížeče obrázků, jakou používá MZA (OpenSeadragon
+# z mza.cz/actapublica/assets), otevře v ní snímek v dočasném panelu, počká na vykreslení a uloží plátno (jako
+# „Uložit obrázek jako“). Žádné dlaždice skriptem, žádné cizí hlavičky – požadavky posílá stránka ARONu.
+# Vlastní prohlížeč ARONu ve skryté kartě nevykresluje a nedá se ovládat, proto vlastní panel. Od 18. 11. 2026 MZA
+# odmítá (403) snímky ARONu načtené ze stránek Acta Publica – proto karta ARONu, ne karta matrik.
 # Oblast (zlomky 0–1 snímku): prohlížeč ji přiblíží – vyšší rozlišení. Velikost panelu RODOKMEN_ARON_PANEL (CSS px,
 # výchozí 1600x1000 → plátno ~3200×2000 na Retině).
 # Šetrnost: jeden snímek najednou ze všech projektů (zámek ~/.cache/rodokmen-mza), pauza RODOKMEN_MZA_PAUZA (20 s).
@@ -13,12 +14,12 @@ cd "$(dirname "$0")/.."
 [[ $# -ge 3 ]] || { sed -n 2,11p "$0"; exit 1; }
 apu=$1; n=$2; out=$3; oblast=${4:-}
 source tools/prohlizec.sh
-js() { prohlizec_js "mza.cz/actapublica" "$1" | tr -d '\r'; }
+js() { prohlizec_js "mza.cz/aron" "$1" | tr -d '\r'; }
 # mw: kód ve světě stránky (Chrome spouští JavaScript z AppleScriptu v odděleném světě – knihovnu stránky nevidí);
 # výsledek se vrací přes atribut data-rk. Kód = tělo funkce s return.
 mw() {
   local c=$(printf %s "document.documentElement.setAttribute('data-rk',String((function(){try{$1}catch(e){return 'chyba '+e.name}})()))" | base64 | tr -d '\n')
-  js "(function(){var s=document.createElement('script');s.textContent=atob('$c');document.documentElement.appendChild(s);s.remove();return document.documentElement.getAttribute('data-rk')})()"
+  js "(function(){var s=document.createElement('script');s.textContent=decodeURIComponent(escape(atob('$c')));document.documentElement.appendChild(s);s.remove();return document.documentElement.getAttribute('data-rk')})()"
 }
 
 L=$HOME/.cache/rodokmen-mza; mkdir -p $L
@@ -37,14 +38,17 @@ fi
 dzi=$(sed -n "${n}p" pracovni/aron_paths/$apu.txt 2>/dev/null)
 [[ $dzi == https://www.mza.cz/* ]] || { echo "snímek $n knihy $apu není (spusť python3 -I tools/lanove.py snimek …)" >&2; exit 1; }
 
-# karta matrik MZA s knihovnou OpenSeadragon (když žádná není, otevře se úvod Acta Publica – jako ruční návštěva)
-# knihovna stránky (krátký výpadek AppleScriptu / překreslování karty: zkus víckrát, než stránku otevřeš znovu)
+# karta ARONu (když žádná není, otevře se stránka knihy v ARONu – jako ruční návštěva) a v ní knihovna prohlížeče MZA
+OSDJS=https://www.mza.cz/actapublica/assets/openseadragon/openseadragon.min.js
+if [[ $(js "location.href") == NO-TAB ]]; then
+  prohlizec_otevri "https://www.mza.cz/aron/apu/$apu"
+  for i in {1..30}; do sleep 2; [[ $(js "document.readyState") == complete ]] && break; done
+fi
 osd=; for i in {1..5}; do [[ $(mw "return typeof OpenSeadragon") == function ]] && { osd=1; break; }; sleep 2; done
 if [[ -z $osd ]]; then
-  [[ $(js "location.href") == NO-TAB ]] && prohlizec_otevri "https://www.mza.cz/actapublica/matrika/detail/5694" \
-    || js "location.href='https://www.mza.cz/actapublica/matrika/detail/5694';'ok'" >/dev/null
-  for i in {1..60}; do sleep 2; [[ $(mw "return typeof OpenSeadragon") == function ]] && break; done
-  [[ $(mw "return typeof OpenSeadragon") == function ]] || { echo "ARON: karta MZA se nenačetla – zkus to později" >&2; exit 1; }
+  mw "if(!document.getElementById('rodokmen-osd')){var s=document.createElement('script');s.id='rodokmen-osd';s.src='$OSDJS';document.head.appendChild(s)}return 'ok'" >/dev/null
+  for i in {1..30}; do sleep 2; [[ $(mw "return typeof OpenSeadragon") == function ]] && break; done
+  [[ $(mw "return typeof OpenSeadragon") == function ]] || { echo "ARON: knihovna prohlížeče se do karty ARONu nenačetla – zkus to později" >&2; exit 1; }
 fi
 
 IFS=x read pw ph <<< "${RODOKMEN_ARON_PANEL:-1600x1000}"
