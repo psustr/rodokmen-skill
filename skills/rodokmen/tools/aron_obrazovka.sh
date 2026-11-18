@@ -38,7 +38,9 @@ dzi=$(sed -n "${n}p" pracovni/aron_paths/$apu.txt 2>/dev/null)
 [[ $dzi == https://www.mza.cz/* ]] || { echo "snímek $n knihy $apu není (spusť python3 -I tools/lanove.py snimek …)" >&2; exit 1; }
 
 # karta matrik MZA s knihovnou OpenSeadragon (když žádná není, otevře se úvod Acta Publica – jako ruční návštěva)
-if [[ $(mw "return typeof OpenSeadragon") != function ]]; then
+# knihovna stránky (krátký výpadek AppleScriptu / překreslování karty: zkus víckrát, než stránku otevřeš znovu)
+osd=; for i in {1..5}; do [[ $(mw "return typeof OpenSeadragon") == function ]] && { osd=1; break; }; sleep 2; done
+if [[ -z $osd ]]; then
   [[ $(js "location.href") == NO-TAB ]] && prohlizec_otevri "https://www.mza.cz/actapublica/matrika/detail/5694" \
     || js "location.href='https://www.mza.cz/actapublica/matrika/detail/5694';'ok'" >/dev/null
   for i in {1..60}; do sleep 2; [[ $(mw "return typeof OpenSeadragon") == function ]] && break; done
