@@ -189,6 +189,13 @@ Adresy u nevyzkoušených portálů ověř při prvním použití (portály se m
   snímku ze všech projektů na počítači (společný zámek `~/.cache/rodokmen-mza`) s pauzou `RODOKMEN_MZA_PAUZA` (výchozí 20 s).
   Při výpadku nezkoušej znovu hned – počkej hodiny až den a pak zkus jeden snímek. Nepřepínej na firemní VPN ani jinou
   síť, abys blokaci obešel. Do zadání pomocníků: jen jeden pomocník s MZA na celý počítač, nestahuj snímky „pro jistotu“.
+- **Výpadek MZA (11/2026):** po ~150 snímcích za den přestal web v noci na ~6 hodin odpovídat (Safari „Failed to open page“,
+  `curl` vrací 000 po ~12 s – TCP spojení projde, HTTP odpověď nepřijde). Nástroj pak hlásí „obrázek se nenačetl“.
+  Postup: přestat, jednou za 1–3 hodiny poslat jediný test (`curl -s -o /dev/null -w '%{http_code}' -m 30
+  https://www.mza.cz/actapublica/` → 302 = zpět) a mezitím dělat offline práci (přepisy, příběh, Geni seznam,
+  dočtení už stažených snímků). Do deníku zapiš čas výpadku i obnovení.
+- **Velikost snímku z `mza_obrazovka.sh` = velikost okna prohlížeče** (v tomto sezení 2928×1172, po zmenšení okna jen
+  2928×800). Pro čtení stačí přiblížení oblasti; chceš-li větší celé snímky, ať má uživatel okno Safari velké.
 - **Rejstřík bývá samostatná kniha** s jiným id (Prostějov: oddaní 1808–1829 = kn. 5947, rejstřík ženichů = kn. 5997) –
   než prohlásíš knihu za „bez rejstříku“, projdi `mza.py hledat` celé fary (roky se překrývají, typ „I“/rejstřík).
   Rejstříky oddaných bývají jen podle ženicha – nevěstu jimi nenajdeš.
