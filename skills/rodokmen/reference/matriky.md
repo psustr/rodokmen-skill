@@ -51,6 +51,10 @@ Mladší knihy jsou na matričním úřadě obce s rozšířenou působností / 
 - Kurentový rejstřík: stáhni plné rozlišení a rozřež stránku na čtvrtiny (sloupec jmen + data),
   `magick f.jpg -crop 1250x1650+X+Y +repage ctvrt.jpg`. **Dopisované řádky** se snadno přečtou špatně (Franziska × Heinrich,
   strana 131 × 151) – údaj z rejstříku vždy ověř v matrice.
+- **„V rejstříku není“ nestačí k uzavření větve.** Když rejstřík mlčí a odhad roku je úzký (sňatek ± 3 roky, křest
+  podle věku), projdi raději přímo strany knihy pro tu obec – pár snímků. Skutečný případ (11/2026): sňatek 1805 i křest
+  1806 byly v knize na stranách, které rejstřík vynechal nebo které při čtení rejstříku zapadly, a větev se kvůli tomu
+  týden točila jinde. Do deníku zapiš u negativního výsledku, zda šlo o rejstřík, nebo o prolistovanou knihu.
 - Do ~1780 latina nebo čeština, pak hodně němčina (kurent), od ~1860 často čeština, ve 20. století čeština.
 - Česká jména v němčině/latině: Johann/Joannes = Jan, Wenzel/Wenceslaus = Václav, Joseph = Josef, Franz/Franciscus = František,
   Maria = Marie, Anna, Katharina = Kateřina, Barbara = Barbora, Magdalena = Majdalena/Magdaléna, Theresia = Terezie,
