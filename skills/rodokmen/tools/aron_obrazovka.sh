@@ -48,7 +48,7 @@ if [[ -z $osd ]]; then
 fi
 
 IFS=x read pw ph <<< "${RODOKMEN_ARON_PANEL:-1600x1000}"
-mw "try{window.__aronV&&window.__aronV.destroy()}catch(e){}var d=document.getElementById('rodokmen-aron');d&&d.remove();d=document.createElement('div');d.id='rodokmen-aron';d.style.cssText='position:fixed;left:0;top:0;width:${pw}px;height:${ph}px;flex:none;z-index:2147483647;background:#000';var e=document.createElement('div');e.style.cssText='width:100%;height:100%';d.appendChild(e);document.documentElement.appendChild(d);window.__aronV=OpenSeadragon({element:e,tileSources:'$dzi',showNavigationControl:false,showNavigator:false,animationTime:0,blendTime:0,immediateRender:false,preserveImageSizeOnResize:true});return 'ok'" >/dev/null
+mw "try{window.__aronV&&window.__aronV.destroy()}catch(e){}var d=document.getElementById('rodokmen-aron');d&&d.remove();d=document.createElement('div');d.id='rodokmen-aron';d.style.cssText='position:fixed;left:0;top:0;width:${pw}px;height:${ph}px;flex:none;z-index:2147483647;background:#000';var e=document.createElement('div');e.style.cssText='width:100%;height:100%';d.appendChild(e);document.documentElement.appendChild(d);var G=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(t,o){if(t=='2d')o=Object.assign({},o,{willReadFrequently:true});return G.call(this,t,o)};try{window.__aronV=OpenSeadragon({element:e,tileSources:'$dzi',showNavigationControl:false,showNavigator:false,animationTime:0,blendTime:0,immediateRender:false,preserveImageSizeOnResize:true})}finally{HTMLCanvasElement.prototype.getContext=G}return 'ok'" >/dev/null
 
 cekej() {
   prev=x; same=0; st=?
@@ -69,14 +69,15 @@ if [[ -n $oblast ]]; then
   sleep 1; cekej
 fi
 
+# plátno prohlížeče je v paměti (willReadFrequently), ne na grafické kartě – kreslí se i při vypnutém displeji
 # ulož: obraz z plátna přes kopii v paměti (při vypnutém displeji vrací plátno s GPU černý obraz – kontrola jasu přímo
 # v ukládaných pixelech, při černém obrazu počkej a zkus znovu)
 ulozeno=
 for pokus in {1..10}; do
-  mw "var v=window.__aronV;try{v.world.update();v.world.draw()}catch(e){}return 'ok'" >/dev/null
+  (( pokus > 1 )) && { mw "var v=window.__aronV;try{v.world.resetItems();v.forceRedraw()}catch(e){}return 'ok'" >/dev/null; cekej; }
   r=$(js "(function(){var c=document.querySelector('#rodokmen-aron canvas'),w=c.width,h=c.height,x=c.getContext('2d').getImageData(0,0,w,h),g=x.data,m=0,k=0;for(var j=0;j<g.length;j+=4004){m+=g[j]+g[j+1]+g[j+2];k++}if(m/k/3<25)return 'černé';var o=document.createElement('canvas');o.width=w;o.height=h;o.getContext('2d',{willReadFrequently:true}).putImageData(x,0,0);var u=o.toDataURL('image/jpeg',0.92),t=new Image();window.__rk={url:u,st:w+'x'+h};return 'ok'})()")
   [[ $r == ok ]] && { ulozeno=1; break; }
-  sleep 10
+  sleep 5
 done
 [[ -n $ulozeno ]] || { echo "ARON: prohlížeč vrací černý obraz (vypnutý displej?) – přestaň a zkus to, až displej poběží" >&2; exit 1; }
 len=$(js "window.__rk.url.length"); start=$(js "window.__rk.url.indexOf(',')+1"); tmp=$(mktemp); : > $tmp
