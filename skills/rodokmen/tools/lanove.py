@@ -51,18 +51,22 @@ def parse(apu):
     for row in r.get("l", []):
         for cell in row:
             vals.setdefault(cell.get("t"), []).extend(v.get("v") for v in cell.get("v", []) if v.get("v"))
-    files = []
+    files, dzi = [], []
     for do in apu.get("digitalObjects") or []:
-        files += [f["id"] for f in sorted(do.get("files") or [], key=lambda f: f.get("order") or 0) if f.get("type") == "TILE"]
+        for f in sorted(do.get("files") or [], key=lambda f: f.get("order") or 0):
+            if f.get("type") == "TILE":
+                files.append(f["id"]); dzi.append(f.get("referencedFile") or "")
     return {"id": apu["id"], "nazev": apu.get("name"), "roky": (vals.get("D") or [""])[0],
-            "signatura": (vals.get("J_S") or [""])[0], "obce": vals.get("J_G") or [], "soubory": files}
+            "signatura": (vals.get("J_S") or [""])[0], "obce": vals.get("J_G") or [], "soubory": files, "dzi": dzi}
 
 
 def kniha(apu_id):
     os.makedirs(CACHE, exist_ok=True)
     f = os.path.join(CACHE, apu_id + ".json")
     if os.path.exists(f):
-        return json.load(open(f, encoding="utf-8"))
+        k = json.load(open(f, encoding="utf-8"))
+        if "dzi" in k:
+            return k
     k = parse(get("/apu/" + apu_id))
     json.dump(k, open(f, "w", encoding="utf-8"), ensure_ascii=False)
     return k
@@ -100,12 +104,13 @@ def hledat(obec):
 
 
 def soubory(apu_id):
-    """pracovni/aron_paths/<apu>.txt – id souborů snímků (jeden na řádek), pro aron_obrazovka.sh."""
+    """pracovni/aron_paths/<apu>.txt – adresy snímků (.dzi na obrázkovém serveru MZA), jedna na řádek, pro aron_obrazovka.sh."""
     k = kniha(apu_id)
     d = os.path.join(ROOT, "pracovni", "aron_paths"); os.makedirs(d, exist_ok=True)
     p = os.path.join(d, apu_id + ".txt")
-    if not os.path.exists(p):
-        open(p, "w").write("\n".join(k["soubory"]) + "\n")
+    radky = "\n".join(k["dzi"]) + "\n"
+    if not os.path.exists(p) or open(p).read() != radky:
+        open(p, "w").write(radky)
     return k
 
 
