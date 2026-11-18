@@ -5,9 +5,9 @@ Použití (spouštěj z kořene projektu: python3 -I tools/lanove.py …):
   index [--obnovit]        jednorázový index všech 372 knih fondu (jen popisy, žádné snímky; ~15 min, pauza 2 s)
   info <apu>               panství, roky, signatura, obce z popisu, počet snímků
   snimek <apu> <n> <out.jpg> [x0,y0,x1,y1]
-                           snímek n (1…) uloží PROHLÍŽEČ – otevře ho v prohlížeči ARON, počká na vykreslení a uloží
-                           pohled (jako „Uložit obrázek jako“, tools/aron_obrazovka.sh); oblast = přiblížení
-                           části pohledu (zlomky 0–1 pohledu, např. pravá polovina 0.5,0,1,1) – vyšší rozlišení
+                           snímek n (1…) uloží PROHLÍŽEČ (tools/aron_obrazovka.sh: prohlížeč obrázků v kartě matrik
+                           MZA, jako „Uložit obrázek jako“; i se skrytým oknem); oblast = přiblížení části snímku
+                           (zlomky 0–1, např. pravá strana 0.5,0,1,1) – vyšší rozlišení
   link <apu> <n>           odkaz na snímek v ARONu (do zaznamy.json „odkaz“)
   svazek <apu>             zapíše knihu do data/svazky.json (klíč „lr“ + 6 znaků apu)
 Metadata (popisy knih) stahuje skript s poctivou identifikací; snímky jen prohlížeč (žádné dlaždice skriptem)."""
