@@ -69,7 +69,16 @@ if [[ -n $oblast ]]; then
   sleep 1; cekej
 fi
 
-js "(function(){var c=document.querySelector('#rodokmen-aron canvas');window.__rk={url:c.toDataURL('image/jpeg',0.92),st:c.width+'x'+c.height};return 'ok'})()" >/dev/null
+# ulož: obraz z plátna přes kopii v paměti (při vypnutém displeji vrací plátno s GPU černý obraz – kontrola jasu přímo
+# v ukládaných pixelech, při černém obrazu počkej a zkus znovu)
+ulozeno=
+for pokus in {1..10}; do
+  mw "var v=window.__aronV;try{v.world.update();v.world.draw()}catch(e){}return 'ok'" >/dev/null
+  r=$(js "(function(){var c=document.querySelector('#rodokmen-aron canvas'),w=c.width,h=c.height,x=c.getContext('2d').getImageData(0,0,w,h),g=x.data,m=0,k=0;for(var j=0;j<g.length;j+=4004){m+=g[j]+g[j+1]+g[j+2];k++}if(m/k/3<25)return 'černé';var o=document.createElement('canvas');o.width=w;o.height=h;o.getContext('2d',{willReadFrequently:true}).putImageData(x,0,0);var u=o.toDataURL('image/jpeg',0.92),t=new Image();window.__rk={url:u,st:w+'x'+h};return 'ok'})()")
+  [[ $r == ok ]] && { ulozeno=1; break; }
+  sleep 10
+done
+[[ -n $ulozeno ]] || { echo "ARON: prohlížeč vrací černý obraz (vypnutý displej?) – přestaň a zkus to, až displej poběží" >&2; exit 1; }
 len=$(js "window.__rk.url.length"); start=$(js "window.__rk.url.indexOf(',')+1"); tmp=$(mktemp); : > $tmp
 for (( o=start; o<len; o+=400000 )); do js "window.__rk.url.substr($o,400000)" | tr -d '\n' >> $tmp; done
 size=$(js "window.__rk.st")
