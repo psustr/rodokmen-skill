@@ -47,6 +47,40 @@ Uživatele tím nezatěžuj (žádné ruční `/clear`), jen pracuj úsporně:
   přesný další krok – archiv, kniha, snímek) a ulož (`git commit`). Pomocníci zapisují výsledky průběžně do souborů.
   Když se sezení samo zkrátí nebo spadne, nová konverzace naváže ze `STAV.md` a nic se neztratí.
 
+## Síť jen přes omezovač rychlosti (povinné, i bez hooku)
+Weby archivů jsou malé servery. Při náporu blokují IP adresu na hodiny i dny, a to i uživateli v prohlížeči.
+Proto **každý síťový požadavek ze skriptů a nástrojů jde přes společný omezovač** `SKILL_DIR/omezovac/omez.py`:
+nástroje z `tools/`, curl, jednorázový kód v Pythonu i příkazy ovládající prohlížeč. Soubory v `tools/` se kvůli
+tomu nemění, jen se spouštějí přes omezovač (z kořene projektu):
+```
+python3 -I SKILL_DIR/omezovac/omez.py tools/aron_search.py "Obec"          # nástroj v Pythonu
+python3 -I SKILL_DIR/omezovac/omez.py tools/mza_obrazovka.sh 6105 97 x.jpg  # skript (bash/zsh)
+python3 -I SKILL_DIR/omezovac/omez.py curl -sS -o pracovni/x.html "https://…"
+python3 -I SKILL_DIR/omezovac/omez.py python -c "import urllib.request; …"  # nebo soubor: omez.py pracovni/x.py
+python3 -I SKILL_DIR/omezovac/omez.py web mza.cz -- osascript …            # jiný příkaz pro daný web
+python3 -I SKILL_DIR/omezovac/omez.py stav                                  # zablokované weby a fronty
+```
+(Na Windows `python -I -X utf8 SKILL_DIR/omezovac/omez.py …`.)
+- **Limity pro každý web zvlášť** (web = doména, např. mza.cz, archives.cz): vyhledávání, API a HTML stránky nejvýš
+  **1 požadavek za 2 s**, dlaždice a obrázky skenů nejvýš **5 požadavků za 1 s**. Platí najednou pro všechny běžící
+  procesy, projekty i pomocníky, protože stav se sdílí přes soubory v `~/.cache/rodokmen-omezovac`.
+- **HTTP 429 nebo 503 = web je na 30 minut zablokovaný.** Omezovač nástroj hned ukončí s kódem **75** a požadavek
+  neopakuje. Ty ho také neopakuj: nezkoušej jiný nástroj, prohlížeč ani jinou síť (VPN). Řekni uživateli, co se
+  stalo, zapiš to do `STAV.md` a dělej offline práci nebo jiný archiv. Kdy blokace skončí, ukáže `omez.py stav`.
+  Kód 75 vrací omezovač i tehdy, když je web zablokovaný už před spuštěním.
+- Nikdy nevolej `curl`, `wget`, `urllib`/`requests` ani síťové nástroje z `tools/` napřímo, ani v pomocníkovi.
+  Výjimka: místní náhled webu (`localhost`). `npm`, `git` a nasazení webu omezovač neřeší.
+- Skripty, které ovládají prohlížeč (`mza_obrazovka.sh`, `aron_obrazovka.sh`, `opava_safari.sh` …), započítá
+  omezovač jako jednu stránku. Dlaždice, které si potom stahuje sám prohlížeč, nevidí, proto mají tyto skripty
+  vlastní zámek a pauzu. Pouštěj je vždy jen po jednom snímku.
+- **WebFetch** (čtení stránky nástrojem Claude) na webech archivů jen s rozvahou. Hook ho zařadí do stejné fronty
+  a na zablokovaném webu ho zamítne.
+- **Hook:** plugin rodokmen má `hooks/hooks.json` (hlídač `omezovac/hlidac.py`), který v projektu rodokmenu zamítne
+  síťové příkazy mimo omezovač. Je-li skill nainstalovaný bez pluginu, zapiš při Fázi 0 do `.claude/settings.json`
+  projektu hook podle hlavičky `SKILL_DIR/omezovac/hlidac.py` (s absolutní cestou). Pravidla platí i bez hooku.
+- Do zadání každého pomocníka napiš: „Síť jen přes `python3 -I SKILL_DIR/omezovac/omez.py …`. Při kódu 75 skonči
+  a nahlas blokaci, nic neopakuj.“
+
 ## Fáze 0 – Příprava (jednou)
 1. Zkontroluj nástroje: `python3 --version` (≥ 3.9), `node --version` (≥ 20), `magick -version` (ImageMagick 7; je-li jen
    verze 6 s příkazem `convert`, nástroje ji mimo Windows použijí samy), `git --version`.
@@ -122,7 +156,8 @@ Základní smyčka pro každou osobu:
 2. **Ověř přístupnost**: matriky jsou v archivu až po uplynutí lhůty od *posledního* zápisu ve svazku
    (narození 100 let, sňatky 75, úmrtí 30). Mladší údaje jsou na matričním úřadě (žádost s doložením příbuzenství) –
    zapiš do `data/archivni_dotazy.md` a jdi dál.
-3. **Najdi svazek**: podle obce → farnost → archiv. ARON: `python3 -I tools/aron_search.py "Obec"`, MZA Brno: `tools/mza.py`, ZA Opava: `tools/opava_safari.sh`, SOA Třeboň:
+3. **Najdi svazek** (síťové nástroje vždy přes omezovač, viz výše – `python3 -I SKILL_DIR/omezovac/omez.py tools/…`):
+   podle obce → farnost → archiv. ARON: `omez.py tools/aron_search.py "Obec"`, MZA Brno: `tools/mza.py`, ZA Opava: `tools/opava_safari.sh`, SOA Třeboň:
    `tools/trebon.py`, SOA Plzeň: `tools/portafontium.py`, SOA Praha (střední Čechy): `tools/ebadatelna.py`,
    Praha: `tools/ahmp_search.sh`; ostatní a Rakousko viz `reference/portaly.md`. Sňatek hledej nejdřív ve farnosti nevěsty.
    Je-li ke svazku index (rejstřík), začni jím. Starší matriky (před ~1784) bývají ve faře sousedního města.
@@ -259,6 +294,8 @@ Nedělej to pořád. Postup:
 ## Co nikdy
 - Nestahuj hromadně z placených služeb (MyHeritage, Ancestry, Geni…) a neobcházej jejich ochranu –
   automatické procházení stovek záznamů vede k **zablokování účtu**. Čti jen to, co uživatel otevře, nebo co potřebuješ jednotlivě.
+- Nesahej na internet mimo omezovač (`omezovac/omez.py`). Po HTTP 429/503 (kód 75) požadavek neopakuj a blokaci
+  neobcházej jiným nástrojem, prohlížečem, sítí ani VPN.
 - Nezadávej za uživatele hesla, platební údaje, neřeš CAPTCHA, nekupuj předplatné.
 - Nedávej na web podrobnosti o žijících lidech bez jejich souhlasu.
 - Nepřepisuj data bez zálohy v gitu; po větším kroku navrhni uložení (`git add -A && git commit -m "…"`).
@@ -279,7 +316,7 @@ Nedělej to pořád. Postup:
 | `tools/` | nástroje (kopie ze skillu; aktualizace celého projektu: znovu spustit `novy_projekt.py` na stejnou složku, viz `reference/web.md`) |
 | `web/` | web (Astro); data do něj jdou jen přes `npm run data` |
 
-## Nástroje (`tools/`, spouštět z kořene projektu `python3 -I tools/<nástroj>`)
+## Nástroje (`tools/`, spouštět z kořene projektu `python3 -I tools/<nástroj>`; ty, které sahají na internet – archivy, noviny, mapy, fotky, prohlížeč –, vždy přes `python3 -I SKILL_DIR/omezovac/omez.py tools/<nástroj>`)
 | Nástroj | Co dělá |
 |---|---|
 | `aron_search.py "Obec"` | najde svazky matrik na ARON (SOA Zámrsk); `"Obec,Fara"` zúží stejnojmenné obce |

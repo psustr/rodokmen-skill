@@ -1,0 +1,17 @@
+{
+  "description": "rodokmen: síťové příkazy jen přes omezovač rychlosti (skills/rodokmen/omezovac/omez.py)",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|WebFetch|Monitor",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 -I \"${CLAUDE_PLUGIN_ROOT}/skills/rodokmen/omezovac/hlidac.py\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  }
+}

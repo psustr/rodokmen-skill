@@ -1,0 +1,3 @@
+#!/bin/sh
+# curl přes omezovač rychlosti (omezovac/omez.py) – do PATH ho dává omez.py svým podprocesům
+exec "${OMEZ_PYTHON:-python3}" -I "$(dirname "$0")/../omez.py" curl "$@"
