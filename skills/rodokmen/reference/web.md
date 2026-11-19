@@ -77,6 +77,11 @@ Náhled spouštěj na pozadí a uživateli pošli odkaz. Vzhled si ověř sám (
   v `obrácených apostrofech` se tam převedou na odkazy na stránky zápisů; první řádek `# …` a komentáře se vynechají.
   Piš ji jako veřejný seznam (bez oslovení a jmen správců), žijící jen jménem a rokem narození. Dopis správci stromu
   (`pracovni/…`) z ní pak jen vychází.
+  **Verze a novinky seznamu:** hned za úvodem oddíl `## Co je nového` s `### Připravuje se` (krátké odrážky o nových
+  a změněných položkách, s odkazem na oddíl) a `### Verze N (datum)`. Připiš tam řádek po každé změně seznamu.
+  Při `npm run nasadit` se `### Připravuje se` sám přejmenuje na `### Verze N (datum)` (jako u novinek webu) a na
+  stránce se pod úvodem ukáže „Verze seznamu N (datum)“. Správci tak čtou jen, co přibylo. Dopis správci posílej
+  vždy s číslem verze a odrážkami „co je nového oproti verzi N−1“ nahoře.
 - **Novinky a verze webu** (`data/novinky.md`): oddíl `## Připravuje se` sbírá krátké odrážky o změnách od posledního
   nasazení (s odkazy `[text](/adresa/)`); **připiš tam řádek po každé změně, kterou návštěvník uvidí** (nová osoba, zápis,
   příběh, fotky, stránka). Při `npm run nasadit` se oddíl sám přejmenuje na `## Verze N (datum)` a soubor se přepíše –

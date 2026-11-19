@@ -113,32 +113,39 @@ def stories(cfg):
     return [(slug, path, opts) for _, slug, path, opts in sorted(out)]
 
 
-def novinky(deploy):
-    """Seznam změn webu (data/novinky.md). Oddíl „## Připravuje se“ sbírá změny od posledního nasazení; při nasazení
-    (`npm run nasadit` = --nasazeni) se z něj stane „## Verze N (datum)“ a soubor se přepíše (nezapomeň commit).
-    Vrací (text pro web, dict(n, datum, polozky) poslední vydané verze nebo None)."""
-    path = os.path.join(DATA, "novinky.md")
+def verzuj(name, deploy, h="##"):
+    """Verzovaný seznam změn v data/<name>. Oddíl „<h> Připravuje se“ sbírá změny od posledního nasazení; při nasazení
+    (`npm run nasadit` = --nasazeni) se z něj stane „<h> Verze N (datum)“ a soubor se přepíše (nezapomeň commit).
+    h = úroveň nadpisu verzí ("##" v novinky.md, "###" v oddílu „## Co je nového“ v chyby_geni.md).
+    Vrací (celý text bez 1. nadpisu a komentářů pro web, dict(n, datum, polozky) poslední vydané verze nebo None)."""
+    path = os.path.join(DATA, name)
     if not os.path.exists(path):
         return "", None
     text = open(path, encoding="utf-8").read()
-    ver = [int(m) for m in re.findall(r"^## Verze (\d+)", text, re.M)]
-    m = re.search(r"^## Připravuje se[^\n]*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    end = r"(?=^#{1,%d} |\Z)" % len(h)   # oddíl končí dalším nadpisem stejné nebo vyšší úrovně
+    ver = [int(m) for m in re.findall(rf"^{h} Verze (\d+)", text, re.M)]
+    m = re.search(rf"^{h} Připravuje se[^\n]*\n(.*?){end}", text, re.M | re.S)
     if deploy and m and strip_comments(m.group(1)).strip():
         n = max(ver, default=0) + 1
         today = datetime.date.today()
-        text = (text[:m.start()] + "## Připravuje se\n\n" + f"## Verze {n} ({today.day}. {today.month}. {today.year})\n"
+        text = (text[:m.start()] + f"{h} Připravuje se\n\n" + f"{h} Verze {n} ({today.day}. {today.month}. {today.year})\n"
                 + m.group(1).strip() + "\n\n" + text[m.end():])
         write(path, text)
-        print(f"novinky: vydána verze {n} webu (data/novinky.md – commitni)")
+        print(f"{name}: vydána verze {n} (data/{name} – commitni)")
     web = strip_comments(re.sub(r"^# .*\n", "", text, count=1))
     if not deploy:
-        web = web.replace("## Připravuje se", "## Připravuje se (jen v náhledu, zatím nezveřejněno)", 1)
+        web = web.replace(f"{h} Připravuje se", f"{h} Připravuje se (jen v náhledu, zatím nezveřejněno)", 1)
     else:
-        web = re.sub(r"^## Připravuje se[^\n]*\n(\s*\n)*(?=^## |\Z)", "", web, flags=re.M)
-    last = re.search(r"^## Verze (\d+) \(([^)]*)\)\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+        web = re.sub(rf"^{h} Připravuje se[^\n]*\n(\s*\n)*{end}", "", web, flags=re.M)
+    last = re.search(rf"^{h} Verze (\d+) \(([^)]*)\)\n(.*?){end}", text, re.M | re.S)
     info = dict(n=int(last.group(1)), datum=last.group(2),
                 polozky=[l[2:].strip() for l in strip_comments(last.group(3)).splitlines() if l.startswith("- ")]) if last else None
     return web, info
+
+
+def novinky(deploy):
+    """Seznam změn webu (data/novinky.md), viz verzuj()."""
+    return verzuj("novinky.md", deploy)
 
 
 def norm_answer(text):
@@ -451,8 +458,10 @@ def main():
         text = open(path, encoding="utf-8").read() if os.path.exists(path) else ""
         write(os.path.join(gen_dir, dst), strip_comments(re.sub(r"^# .*\n", "", text, count=1)))
     # Co opravit na Geni (data/chyby_geni.md) → /geni/; klíč zápisu v `obrácených apostrofech` = odkaz na stránku zápisu
-    path = os.path.join(DATA, "chyby_geni.md")
-    geni = strip_comments(re.sub(r"^# .*\n", "", open(path, encoding="utf-8").read(), count=1)) if os.path.exists(path) else ""
+    # oddíl „## Co je nového“ s „### Připravuje se“ / „### Verze N (datum)“ se verzuje při nasazení jako novinky.md
+    geni, geni_ver = verzuj("chyby_geni.md", "--nasazeni" in sys.argv, "###")
+    if geni_ver:   # číslo a datum verze seznamu hned pod úvod (pro správce: „posílám verzi N“)
+        geni = f"*Verze seznamu {geni_ver['n']} ({geni_ver['datum']}).*\n\n" + geni.lstrip("\n")
     geni = re.sub(r"`([a-z0-9_]+)`", lambda m: f"[{recs[m.group(1)]['title']}](/zdroj/{m.group(1)}/)" if m.group(1) in recs else m.group(0), geni)
     write(os.path.join(gen_dir, "geni.md"), geni)
     write(os.path.join(gen_dir, "novinky.md"), novinky_web)
