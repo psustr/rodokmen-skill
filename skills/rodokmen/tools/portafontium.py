@@ -149,7 +149,20 @@ def scan(kniha, n):
     return kniha, fields, path, link
 
 
+def _archiv():
+    """Sdílený archiv snímků (tools/archiv.py) – snímek, který už někdo stáhl, se nestahuje znovu."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("archiv", os.path.join(os.path.dirname(os.path.abspath(__file__)), "archiv.py"))
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
 def snimek(kniha, n, out, nahled=False, crop=None):
+    arch = _archiv()
+    knihaa = kniha.strip("/").split("/")[-1]
+    if arch.vydej("pf", knihaa, int(n), out, "nahled" if nahled else "", crop) == 0:
+        return
     kniha, _, path, link = scan(kniha, n)
     region = "full"
     if crop:
@@ -165,6 +178,8 @@ def snimek(kniha, n, out, nahled=False, crop=None):
     with open(out, "wb") as f:
         f.write(data)
     print(out, f"{len(data) // 1024} kB", "odkaz:", BASE + link)
+    arch.uloz("pf", kniha, int(n), out, ",".join(f"{v:g}" for v in crop) if crop else ("nahled" if nahled else ""),
+              popis=f"Porta fontium {kniha} sn. {n}")
 
 
 def fara(slug):

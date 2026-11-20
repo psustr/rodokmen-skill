@@ -27,6 +27,7 @@ Najdeš v ní `tools/` (nástroje), `template/` (šablona projektu a webu) a `re
 ## Na začátku každé konverzace
 1. Jsi ve složce projektu? (`data/STAV.md` existuje.) → Přečti `data/STAV.md`, konec `data/research_log.md`
    a pokračuj podle sekce „Rozpracováno“. Krátce uživateli shrň, kde jste skončili.
+   Spusť `python3 -I tools/archiv.py pripomen` – vypíše-li připomínku úklidu sdíleného archivu snímků, předej ji.
    **Verze:** porovnej soubor `.skill_verze` v projektu se `SKILL_DIR/VERZE`. Chybí-li, nebo se liší, řekni jednou větou,
    že je nová verze skillu, a nabídni aktualizaci projektu: `python3 -I SKILL_DIR/tools/novy_projekt.py <složka projektu>`
    (data zůstanou, změněné soubory webu se zazálohují do `pracovni/`), pak ve `web/` `npm install`. Po souhlasu ji udělej
@@ -80,6 +81,27 @@ python3 -I SKILL_DIR/omezovac/omez.py stav                                  # za
   projektu hook podle hlavičky `SKILL_DIR/omezovac/hlidac.py` (s absolutní cestou). Pravidla platí i bez hooku.
 - Do zadání každého pomocníka napiš: „Síť jen přes `python3 -I SKILL_DIR/omezovac/omez.py …`. Při kódu 75 skonči
   a nahlas blokaci, nic neopakuj.“
+
+## Sdílený archiv snímků (povinné)
+Všechny stažené snímky matrik a jiných pramenů se sdílejí mezi projekty i sezeními na tomto počítači – co jednou
+někdo stáhl, už se ze sítě nestahuje. Archiv: `~/Work/rodokmen-archiv` (jinak proměnná `RODOKMEN_ARCHIV`), nástroj
+`tools/archiv.py` (bez sítě; na stejném disku pevné odkazy, místo se nezdvojuje), index `index.tsv`.
+- **Než začneš stahovat**, podívej se do archivu: `python3 -I tools/archiv.py hledej "<kniha nebo obec>"`, případně
+  `archiv.py najdi <portál> <kniha> <snímek>`. `mza_obrazovka.sh`, `aron_obrazovka.sh` (i `lanove.py snimek`) a
+  `portafontium.py snimek` to dělají samy: snímek z archivu vydají bez sítě (výřez a náhled udělají z celého snímku
+  na místě) a po stažení ho do archivu uloží.
+- **Jiné nástroje a ruční stažení** (ZA Opava, Třeboň, eBadatelna, AHMP, snímky od uživatele…): po stažení ulož
+  `python3 -I tools/archiv.py uloz <portál> <kniha> <snímek> <soubor.jpg> [varianta] --popis "…"` a před stažením
+  zkus `archiv.py vydej <portál> <kniha> <snímek> <out.jpg> [nahled|x0,y0,x1,y1]` (kód 0 = máš, 1 = stahuj).
+  Portál = krátký název (mza, aron, pf, opava, trebon, ebadatelna, ahmp), kniha = id knihy na portálu, snímek = pořadí.
+  Ukládej hlavně celé snímky; varianta jen u přiblížení s vyšším rozlišením.
+- Pomocníkům napiš do zadání: „Než stáhneš snímek, zkus `tools/archiv.py vydej …`; po stažení `archiv.py uloz …`.“
+- Snímky, které už v projektu leží (pracovni/), zařadí `archiv.py import <složka projektu>` (jednou; co nejde podle
+  názvu přiřadit ke knize, uloží do `projekty/<projekt>/` – dohledatelné přes `projekty/SEZNAM.tsv`).
+- **Úklid:** na začátku každé konverzace (po přečtení STAV.md) spusť `python3 -I tools/archiv.py pripomen`. Vypíše-li
+  „PŘIPOMEŇ UŽIVATELI“ (jednou za 14 dní nebo nad 20 GB), řekni uživateli, ať archiv projde a promaže snímky, které už
+  nepotřebuje (pracovní výřezy, prošlé knihy bez nálezu – výřezy na webu jsou v projektu ve `vyrezy/` a `zdroje/`).
+  Sám nic nemaž. Po úklidu `archiv.py uklizeno` (přepočítá index). Velikost: `archiv.py prehled`.
 
 ## Fáze 0 – Příprava (jednou)
 1. Zkontroluj nástroje: `python3 --version` (≥ 3.9), `node --version` (≥ 20), `magick -version` (ImageMagick 7; je-li jen
@@ -321,6 +343,7 @@ Nedělej to pořád. Postup:
 |---|---|
 | `aron_search.py "Obec"` | najde svazky matrik na ARON (SOA Zámrsk); `"Obec,Fara"` zúží stejnojmenné obce |
 | `aron_img.py <apu> info / <snímek> 1 pracovni/x.jpg / link <n> / svazek` | stáhne snímek, dá odkaz, zapíše svazek |
+| `archiv.py hledej / najdi / vydej / uloz / prehled / pripomen / uklizeno / import` | sdílený archiv stažených snímků pro všechny projekty a sezení (`~/Work/rodokmen-archiv`); před stažením se podívej, po stažení ulož |
 | `lanove.py hledat "Obec" / info / snimek <apu> <n> out.jpg / link / svazek` | lánové rejstříky Moravy 1656–1679 (MZA D 1, ARON); snímek ukládá prohlížeč (`aron_obrazovka.sh`) – postup v `reference/lanove-rejstriky.md` |
 | `trebon.py misto / svazky / rejstrik / snimek / svazek` | matriky SOA Třeboň (jižní Čechy) bez prohlížeče, i rejstříky |
 | `portafontium.py fara / info / snimek / link / svazek` | matriky SOA Plzeň (západní Čechy, Porta fontium) bez prohlížeče (faru zjisti na portálu) |

@@ -13,6 +13,8 @@
 cd "$(dirname "$0")/.."
 [[ $# -ge 3 ]] || { sed -n 2,9p "$0"; exit 1; }
 id=$1; n=$2; out=$3; oblast=${4:-}
+# sdílený archiv snímků: když snímek už někdo stáhl, vydá se z archivu (výřez se udělá na místě) – bez sítě
+python3 -I tools/archiv.py vydej mza $id $n "$out" ${oblast:+$oblast --presne} 2>/dev/null && exit 0
 source tools/prohlizec.sh
 js() { prohlizec_js "mza.cz/actapublica" "$1" | tr -d '\r'; }
 
@@ -71,3 +73,4 @@ for (( o=start; o<len; o+=400000 )); do js "window.__rk.url.substr($o,400000)" |
 size=$(js "window.__rk.st"); js "window.__rk=null;'ok'" >/dev/null
 mkdir -p "$(dirname "$out")"; base64 -D -i $tmp -o "$out"; rm -f $tmp
 echo "$out: $size px (pohled prohlížeče)"
+python3 -I tools/archiv.py uloz mza $id $n "$out" ${oblast:+$oblast} --popis "mza $id sn. $n" >/dev/null 2>&1 || true
